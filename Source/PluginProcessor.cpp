@@ -19,13 +19,37 @@ SIGAudioProcessor::SIGAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ), treeState(*this, nullptr, "PARAMETERS", createParameterLayout())
 #endif
 {
+    treeState.addParameterListener("gain", this);
+    treeState.addParameterListener("freq", this);
 }
 
 SIGAudioProcessor::~SIGAudioProcessor()
 {
+    treeState.removeParameterListener("gain", this);
+    treeState.removeParameterListener("freq", this);
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createParameterLayout()
+{
+    std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
+    
+    
+    auto pGain = std::make_unique<juce::AudioParameterFloat>("gain", "Gain", juce::NormalisableRange<float>(-120.0f, 0.0, 0.01, 1.0f), -60.0f);
+    auto pFreq = std::make_unique<juce::AudioParameterFloat>("freq", "Freq", juce::NormalisableRange<float>(20.0f, 21000.0, 0.01, 0.3f), 440.0f);
+    
+    params.push_back(std::move(pGain));
+    params.push_back(std::move(pFreq));
+    
+    return { params.begin(), params.end() };
+}
+
+void SIGAudioProcessor::parameterChanged(const juce::String &parameterID, float newValue)
+{
+    juce::Decibels::decibelsToGain(treeState.getRawParameterValue("gain")->load());
+    treeState.getRawParameterValue("freq")->load();
 }
 
 //==============================================================================
@@ -93,8 +117,14 @@ void SIGAudioProcessor::changeProgramName (int index, const juce::String& newNam
 //==============================================================================
 void SIGAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    juce::dsp::ProcessSpec spec;
+    spec.maximumBlockSize = samplesPerBlock;
+    spec.sampleRate = sampleRate;
+    spec.numChannels = getTotalNumOutputChannels();
+    
+    osc.prepare(spec);
+    gain.prepare(spec);
+    
 }
 
 void SIGAudioProcessor::releaseResources()
@@ -135,27 +165,16 @@ void SIGAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
-
-        // ..do something to the data...
-    }
+    juce::dsp::AudioBlock<float> block { buffer };
+    
+    osc.setFrequency(treeState.getRawParameterValue("freq")->load());
+    gain.setGainLinear(juce::Decibels::decibelsToGain(treeState.getRawParameterValue("gain")->load()));
+    
+    osc.process(juce::dsp::ProcessContextReplacing<float> (block));
+    gain.process(juce::dsp::ProcessContextReplacing<float> (block));
 }
 
 //==============================================================================

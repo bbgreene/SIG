@@ -13,7 +13,7 @@
 //==============================================================================
 /**
 */
-class SIGAudioProcessor  : public juce::AudioProcessor
+class SIGAudioProcessor  : public juce::AudioProcessor, juce::AudioProcessorValueTreeState::Listener
 {
 public:
     //==============================================================================
@@ -53,7 +53,21 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    juce::AudioProcessorValueTreeState treeState;
 private:
+    
+    // return std::sin (x);  // sine wave
+    // return x / juce::MathConstants<float>::pi;  // saw wave
+    // return x < 0.0f ? -1.0f : 1.0f;   // square wave
+    
+    // the 200 is lookup table value - not sure what that is but it makes it more efficient??
+    juce::dsp::Oscillator<float> osc { [](float x) { return std::sin (x); }, 200 };
+    juce::dsp::Gain<float> gain;
+    float freq { 440.0f };
+    
+    //Functions for param layout and changes
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    void parameterChanged (const juce::String& parameterID, float newValue) override;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SIGAudioProcessor)
 };
