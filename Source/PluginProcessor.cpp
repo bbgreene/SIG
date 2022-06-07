@@ -134,6 +134,9 @@ void SIGAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     osc.prepare(spec);
     gain.prepare(spec);
     
+    osc.setFrequency(treeState.getRawParameterValue("freq")->load());
+    gain.setGainLinear(juce::Decibels::decibelsToGain(treeState.getRawParameterValue("gain")->load()));
+    
 }
 
 void SIGAudioProcessor::releaseResources()
@@ -177,19 +180,16 @@ void SIGAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
     
-    if(bypass)
-    {
-        
-    }
-    else
-    {
     juce::dsp::AudioBlock<float> block { buffer };
     
-    osc.setFrequency(treeState.getRawParameterValue("freq")->load());
+    osc.setFrequency(*treeState.getRawParameterValue("freq"));
     gain.setGainLinear(juce::Decibels::decibelsToGain(treeState.getRawParameterValue("gain")->load()));
     
-    osc.process(juce::dsp::ProcessContextReplacing<float> (block));
-    gain.process(juce::dsp::ProcessContextReplacing<float> (block));
+    if(bypass){}
+    else
+    {
+        osc.process(juce::dsp::ProcessContextReplacing<float> (block));
+        gain.process(juce::dsp::ProcessContextReplacing<float> (block));
     }
 }
 
