@@ -57,7 +57,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createPar
 
 void SIGAudioProcessor::parameterChanged(const juce::String &parameterID, float newValue)
 {
-    juce::Decibels::decibelsToGain(treeState.getRawParameterValue("gain")->load());
+    gain.setTargetValue(juce::Decibels::decibelsToGain(treeState.getRawParameterValue("gain")->load()));
     treeState.getRawParameterValue("freq")->load();
     
     if(parameterID == "bypass")
@@ -140,15 +140,15 @@ void SIGAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     spec.sampleRate = sampleRate;
     spec.numChannels = getTotalNumOutputChannels();
     
-    osc.prepare(spec);
-    gain.prepare(spec);
+    gain.reset(sampleRate, 0.1f);
+    gain.setCurrentAndTargetValue(juce::Decibels::decibelsToGain(treeState.getRawParameterValue("gain")->load()));
     
+    osc.prepare(spec);
     osc.setFrequency(treeState.getRawParameterValue("freq")->load());
-    gain.setGainLinear(juce::Decibels::decibelsToGain(treeState.getRawParameterValue("gain")->load()));
     
     panner.reset();
     panner.prepare(spec);
-    panner.setRule(juce::dsp::PannerRule::sin3dB);
+    panner.setRule(juce::dsp::PannerRule::sin3dB); // consider what is actually needed here in terms of amplitude
     
     routingChoice = treeState.getRawParameterValue("routing")->load();
 }
@@ -194,22 +194,35 @@ void SIGAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
     
+    //Target value of gain coming from gain slider
+    gain.setTargetValue(juce::Decibels::decibelsToGain(treeState.getRawParameterValue("gain")->load()));
+    
     // panner L, L+R, R choices coming from panRoutingFunc
     panner.setPan(panRoutingFunc(routingChoice));
     
+    //oscillator frequency
+    osc.setFrequency(*treeState.getRawParameterValue("freq"));
+
+    //My dsp object
     juce::dsp::AudioBlock<float> block { buffer };
     
-    osc.setFrequency(*treeState.getRawParameterValue("freq"));
-    gain.setGainLinear(juce::Decibels::decibelsToGain(treeState.getRawParameterValue("gain")->load()));
-    
-    if(bypass){}
+    //bypass if statement
+    if(bypass){} // if true, do nothing
     else
-    {
+    {   //if false process osc, panner and gain
         osc.process(juce::dsp::ProcessContextReplacing<float> (block));
-        gain.process(juce::dsp::ProcessContextReplacing<float> (block));
+        panner.process(juce::dsp::ProcessContextReplacing<float> (block));
+        
+        for(int channel = 0; channel < block.getNumChannels(); ++channel)
+        {
+            auto* channelData = block.getChannelPointer(channel);
+
+            for(int sample = 0; sample < block.getNumSamples(); ++sample)
+            {
+                channelData[sample] *= gain.getNextValue();
+            }
+        }
     }
-    
-    panner.process(juce::dsp::ProcessContextReplacing<float> (block));
 }
 
 //Function returns value for panner.setPan in process block

@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="atxE3a" name="SIG" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginManufacturer="Olumay dsp"
-              cppLanguageStandard="17" pluginCharacteristicsValue="pluginIsSynth">
+              cppLanguageStandard="17">
   <MAINGROUP id="cwqjOI" name="SIG">
     <GROUP id="{A796C4DB-899D-D56B-C7CF-D79E4913ABE5}" name="Source">
       <FILE id="a28jdu" name="PluginProcessor.cpp" compile="1" resource="0"
