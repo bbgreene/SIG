@@ -25,6 +25,7 @@ SIGAudioProcessor::SIGAudioProcessor()
     treeState.addParameterListener("gain", this);
     treeState.addParameterListener("freq", this);
     treeState.addParameterListener("bypass", this);
+    treeState.addParameterListener("routing", this);
 }
 
 SIGAudioProcessor::~SIGAudioProcessor()
@@ -32,20 +33,24 @@ SIGAudioProcessor::~SIGAudioProcessor()
     treeState.removeParameterListener("gain", this);
     treeState.removeParameterListener("freq", this);
     treeState.removeParameterListener("bypass", this);
+    treeState.removeParameterListener("routing", this);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createParameterLayout()
 {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
     
+    juce::StringArray routingSelector = { "L", "L+R", "R" };
     
     auto pGain = std::make_unique<juce::AudioParameterFloat>("gain", "Gain", juce::NormalisableRange<float>(-120.0f, 0.0, 0.01, 1.0f), -60.0f);
     auto pFreq = std::make_unique<juce::AudioParameterFloat>("freq", "Freq", juce::NormalisableRange<float>(20.0f, 21000.0, 0.01, 0.3f), 440.0f);
     auto pBypass = std::make_unique<juce::AudioParameterBool>("bypass", "Bypass", 0);
+    auto pRoutingChoice = std::make_unique<juce::AudioParameterChoice>("routing", "Routing", routingSelector, 1);
     
     params.push_back(std::move(pGain));
     params.push_back(std::move(pFreq));
     params.push_back(std::move(pBypass));
+    params.push_back(std::move(pRoutingChoice));
     
     return { params.begin(), params.end() };
 }
@@ -58,6 +63,10 @@ void SIGAudioProcessor::parameterChanged(const juce::String &parameterID, float 
     if(parameterID == "bypass")
     {
         bypass = newValue;
+    }
+    if(parameterID == "routing")
+    {
+        routingChoice = newValue;
     }
 }
 
@@ -137,6 +146,11 @@ void SIGAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     osc.setFrequency(treeState.getRawParameterValue("freq")->load());
     gain.setGainLinear(juce::Decibels::decibelsToGain(treeState.getRawParameterValue("gain")->load()));
     
+    panner.reset();
+    panner.prepare(spec);
+    panner.setRule(juce::dsp::PannerRule::sin3dB);
+    
+    routingChoice = treeState.getRawParameterValue("routing")->load();
 }
 
 void SIGAudioProcessor::releaseResources()
@@ -180,6 +194,9 @@ void SIGAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
     
+    // panner L, L+R, R choices coming from panRoutingFunc
+    panner.setPan(panRoutingFunc(routingChoice));
+    
     juce::dsp::AudioBlock<float> block { buffer };
     
     osc.setFrequency(*treeState.getRawParameterValue("freq"));
@@ -190,6 +207,28 @@ void SIGAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     {
         osc.process(juce::dsp::ProcessContextReplacing<float> (block));
         gain.process(juce::dsp::ProcessContextReplacing<float> (block));
+    }
+    
+    panner.process(juce::dsp::ProcessContextReplacing<float> (block));
+}
+
+//Function returns value for panner.setPan in process block
+float SIGAudioProcessor::panRoutingFunc(int choice)
+{
+    switch (choice)
+    {
+        case 0:
+            return -1.0f;
+            break;
+        case 1:
+            return 0.0f;
+            break;
+        case 2:
+            return 1.0f;
+            break;
+        default:
+            return 0.0f;
+            break;
     }
 }
 

@@ -56,16 +56,22 @@ public:
     juce::AudioProcessorValueTreeState treeState;
 private:
     
+    //juce dsp instantiations
+    juce::dsp::Oscillator<float> osc { [](float x) { return std::sin (x); }, 200 }; // the 200 is lookup table value - not sure what that is but it makes it more efficient??
+    juce::dsp::Gain<float> gain;
+    juce::dsp::Panner<float> panner;
+    
     // return std::sin (x);  // sine wave
     // return x / juce::MathConstants<float>::pi;  // saw wave
     // return x < 0.0f ? -1.0f : 1.0f;   // square wave
     
-    // the 200 is lookup table value - not sure what that is but it makes it more efficient??
-    juce::dsp::Oscillator<float> osc { [](float x) { return std::sin (x); }, 200 };
-    juce::dsp::Gain<float> gain;
-    
+    // variable instantiations
     float freq { 440.0f };
     bool bypass { false };
+    int routingChoice { 1 };
+    
+    //Functions for dsp
+    float panRoutingFunc(int choice);
     
     //Functions for param layout and changes
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
