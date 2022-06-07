@@ -63,7 +63,9 @@ private:
     // the 200 is lookup table value - not sure what that is but it makes it more efficient??
     juce::dsp::Oscillator<float> osc { [](float x) { return std::sin (x); }, 200 };
     juce::dsp::Gain<float> gain;
+    
     float freq { 440.0f };
+    bool bypass { false };
     
     //Functions for param layout and changes
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();

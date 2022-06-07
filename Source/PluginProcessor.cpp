@@ -24,12 +24,14 @@ SIGAudioProcessor::SIGAudioProcessor()
 {
     treeState.addParameterListener("gain", this);
     treeState.addParameterListener("freq", this);
+    treeState.addParameterListener("bypass", this);
 }
 
 SIGAudioProcessor::~SIGAudioProcessor()
 {
     treeState.removeParameterListener("gain", this);
     treeState.removeParameterListener("freq", this);
+    treeState.removeParameterListener("bypass", this);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createParameterLayout()
@@ -39,9 +41,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createPar
     
     auto pGain = std::make_unique<juce::AudioParameterFloat>("gain", "Gain", juce::NormalisableRange<float>(-120.0f, 0.0, 0.01, 1.0f), -60.0f);
     auto pFreq = std::make_unique<juce::AudioParameterFloat>("freq", "Freq", juce::NormalisableRange<float>(20.0f, 21000.0, 0.01, 0.3f), 440.0f);
+    auto pBypass = std::make_unique<juce::AudioParameterBool>("bypass", "Bypass", 0);
     
     params.push_back(std::move(pGain));
     params.push_back(std::move(pFreq));
+    params.push_back(std::move(pBypass));
     
     return { params.begin(), params.end() };
 }
@@ -50,6 +54,11 @@ void SIGAudioProcessor::parameterChanged(const juce::String &parameterID, float 
 {
     juce::Decibels::decibelsToGain(treeState.getRawParameterValue("gain")->load());
     treeState.getRawParameterValue("freq")->load();
+    
+    if(parameterID == "bypass")
+    {
+        bypass = newValue;
+    }
 }
 
 //==============================================================================
@@ -167,7 +176,13 @@ void SIGAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
-
+    
+    if(bypass)
+    {
+        
+    }
+    else
+    {
     juce::dsp::AudioBlock<float> block { buffer };
     
     osc.setFrequency(treeState.getRawParameterValue("freq")->load());
@@ -175,6 +190,7 @@ void SIGAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     
     osc.process(juce::dsp::ProcessContextReplacing<float> (block));
     gain.process(juce::dsp::ProcessContextReplacing<float> (block));
+    }
 }
 
 //==============================================================================
