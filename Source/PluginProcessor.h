@@ -56,6 +56,8 @@ public:
     juce::AudioProcessorValueTreeState treeState;
 private:
     
+    juce::Random random;
+    
     //juce dsp instantiations
     juce::dsp::Oscillator<float> osc { [](float x) { return std::sin (x); }, 200 }; // the 200 is lookup table value - not sure what that is but it makes it more efficient??
     juce::LinearSmoothedValue<float> gain { 0.0f };

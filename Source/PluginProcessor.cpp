@@ -42,7 +42,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createPar
     
     juce::StringArray routingSelector = { "L", "L+R", "R" };
     
-    auto pGain = std::make_unique<juce::AudioParameterFloat>("gain", "Gain", juce::NormalisableRange<float>(-120.0f, 0.0, 0.01, 1.0f), -60.0f);
+    auto pGain = std::make_unique<juce::AudioParameterFloat>("gain", "Gain", juce::NormalisableRange<float>(-120.0f, 0.0, 0.01, 1.0f), -20.0f);
     auto pFreq = std::make_unique<juce::AudioParameterFloat>("freq", "Freq", juce::NormalisableRange<float>(20.0f, 21000.0, 0.01, 0.3f), 440.0f);
     auto pBypass = std::make_unique<juce::AudioParameterBool>("bypass", "Bypass", 0);
     auto pRoutingChoice = std::make_unique<juce::AudioParameterChoice>("routing", "Routing", routingSelector, 1);
@@ -148,7 +148,7 @@ void SIGAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     
     panner.reset();
     panner.prepare(spec);
-    panner.setRule(juce::dsp::PannerRule::sin3dB); // consider what is actually needed here in terms of amplitude
+    panner.setRule(juce::dsp::PannerRule::balanced); // L, L+R, R are all the same volume
     
     routingChoice = treeState.getRawParameterValue("routing")->load();
 }
@@ -210,8 +210,8 @@ void SIGAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     if(bypass){} // if true, do nothing
     else
     {   //if false process osc, panner and gain
-        osc.process(juce::dsp::ProcessContextReplacing<float> (block));
-        panner.process(juce::dsp::ProcessContextReplacing<float> (block));
+//        osc.process(juce::dsp::ProcessContextReplacing<float> (block));
+        
         
         for(int channel = 0; channel < block.getNumChannels(); ++channel)
         {
@@ -219,9 +219,12 @@ void SIGAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
 
             for(int sample = 0; sample < block.getNumSamples(); ++sample)
             {
+//                channelData[sample] = ((float)rand()/RAND_MAX) * 2.0f - 1.0f; // white noise - need something to compare this to
+                channelData[sample] = random.nextFloat(); // from JUCE tutorial
                 channelData[sample] *= gain.getNextValue();
             }
         }
+        panner.process(juce::dsp::ProcessContextReplacing<float> (block));
     }
 }
 
