@@ -26,6 +26,7 @@ SIGAudioProcessor::SIGAudioProcessor()
     treeState.addParameterListener("freq", this);
     treeState.addParameterListener("bypass", this);
     treeState.addParameterListener("routing", this);
+    treeState.addParameterListener("signal type", this);
 }
 
 SIGAudioProcessor::~SIGAudioProcessor()
@@ -34,6 +35,7 @@ SIGAudioProcessor::~SIGAudioProcessor()
     treeState.removeParameterListener("freq", this);
     treeState.removeParameterListener("bypass", this);
     treeState.removeParameterListener("routing", this);
+    treeState.removeParameterListener("signal type", this);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createParameterLayout()
@@ -41,16 +43,19 @@ juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createPar
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
     
     juce::StringArray routingSelector = { "L", "L+R", "R" };
+    juce::StringArray signalTypeSelector = { "Sine", "White", "Pink" };
     
     auto pGain = std::make_unique<juce::AudioParameterFloat>("gain", "Gain", juce::NormalisableRange<float>(-120.0f, 0.0, 0.01, 1.0f), -20.0f);
     auto pFreq = std::make_unique<juce::AudioParameterFloat>("freq", "Freq", juce::NormalisableRange<float>(20.0f, 21000.0, 0.01, 0.3f), 440.0f);
     auto pBypass = std::make_unique<juce::AudioParameterBool>("bypass", "Bypass", 0);
     auto pRoutingChoice = std::make_unique<juce::AudioParameterChoice>("routing", "Routing", routingSelector, 1);
+    auto pSignalType = std::make_unique<juce::AudioParameterChoice>("signal type", "Signal Type", signalTypeSelector, 0);
     
     params.push_back(std::move(pGain));
     params.push_back(std::move(pFreq));
     params.push_back(std::move(pBypass));
     params.push_back(std::move(pRoutingChoice));
+    params.push_back(std::move(pSignalType));
     
     return { params.begin(), params.end() };
 }
@@ -67,6 +72,10 @@ void SIGAudioProcessor::parameterChanged(const juce::String &parameterID, float 
     if(parameterID == "routing")
     {
         routingChoice = newValue;
+    }
+    if(parameterID == "signal type")
+    {
+        signalType = newValue;
     }
 }
 
@@ -151,6 +160,7 @@ void SIGAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     panner.setRule(juce::dsp::PannerRule::balanced); // L, L+R, R are all the same volume
     
     routingChoice = treeState.getRawParameterValue("routing")->load();
+    signalType = treeState.getRawParameterValue("signal type")->load();
 }
 
 void SIGAudioProcessor::releaseResources()
@@ -208,20 +218,34 @@ void SIGAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     
     //bypass if statement
     if(bypass){} // if true, do nothing
-    else
-    {   //if false process osc, panner and gain
-//        osc.process(juce::dsp::ProcessContextReplacing<float> (block));
-        
-        
-        for(int channel = 0; channel < block.getNumChannels(); ++channel)
+    else//if false process osc, panner and gain
+    {
+        if(signalType == 0)
         {
-            auto* channelData = block.getChannelPointer(channel);
-
-            for(int sample = 0; sample < block.getNumSamples(); ++sample)
+            osc.process(juce::dsp::ProcessContextReplacing<float> (block));
+                
+            for(int channel = 0; channel < block.getNumChannels(); ++channel)
             {
-//                channelData[sample] = ((float)rand()/RAND_MAX) * 2.0f - 1.0f; // white noise - need something to compare this to
-                channelData[sample] = random.nextFloat(); // from JUCE tutorial
-                channelData[sample] *= gain.getNextValue();
+                auto* channelData = block.getChannelPointer(channel);
+
+                for(int sample = 0; sample < block.getNumSamples(); ++sample)
+                {
+                    channelData[sample] *= gain.getNextValue();
+                }
+            }
+        }
+        else if (signalType == 1)
+        {
+            for(int channel = 0; channel < block.getNumChannels(); ++channel)
+            {
+                auto* channelData = block.getChannelPointer(channel);
+
+                for(int sample = 0; sample < block.getNumSamples(); ++sample)
+                {
+                    //channelData[sample] = ((float)rand()/RAND_MAX) * 2.0f - 1.0f; // white noise from a forum post - need something to compare this to
+                    channelData[sample] = random.nextFloat(); // from JUCE tutorial, seems the same as above but a bit quieter
+                    channelData[sample] *= gain.getNextValue();
+                }
             }
         }
         panner.process(juce::dsp::ProcessContextReplacing<float> (block));

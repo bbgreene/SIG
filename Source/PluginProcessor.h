@@ -71,6 +71,7 @@ private:
     float freq { 440.0f };
     bool bypass { false };
     int routingChoice { 1 };
+    int signalType { 0 };
     
     //Functions for dsp
     float panRoutingFunc(int choice);
