@@ -220,19 +220,14 @@ void SIGAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     
     //bypass if statement
     if(bypass){} // if true, do nothing
-    else//if false process osc, panner and gain
+    else //if false process osc, white, pink depending on signalType chosen
     {
-        if(signalType == 0) //sine
+        switch (signalType)
         {
-            oscProcess(buffer);
-        }
-        else if (signalType == 1) //white noise
-        {
-            whiteNoiseProcess(buffer);
-        }
-        else if (signalType == 2)//pink noise
-        {
-            pinkNoiseProcess(buffer);
+            case 0: oscProcess(buffer); break;
+            case 1: whiteNoiseProcess(buffer); break;
+            case 2: pinkNoiseProcess(buffer); break;
+            default: oscProcess(buffer); break;
         }
         panner.process(juce::dsp::ProcessContextReplacing<float> (block));
     }

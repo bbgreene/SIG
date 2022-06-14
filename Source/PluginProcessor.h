@@ -57,11 +57,10 @@ public:
     juce::AudioProcessorValueTreeState treeState;
 private:
     
-    juce::Random random;
-    
-    //juce dsp instantiations
+    //juce oscillator instantiation
     juce::dsp::Oscillator<float> osc { [](float x) { return std::sin (x); }, 200 }; //200 is lookup table value - not sure what that is but it makes it more efficient??
-    
+    //White noise random instantiation
+    juce::Random random;
     //Pink noise object instantiation
     PinkNumber pn;
 
