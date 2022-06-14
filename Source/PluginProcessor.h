@@ -60,15 +60,18 @@ private:
     juce::Random random;
     
     //juce dsp instantiations
-    juce::dsp::Oscillator<float> osc { [](float x) { return std::sin (x); }, 200 }; // the 200 is lookup table value - not sure what that is but it makes it more efficient??
-    juce::LinearSmoothedValue<float> gain { 0.0f };
-    juce::dsp::Panner<float> panner;
+    juce::dsp::Oscillator<float> osc { [](float x) { return std::sin (x); }, 200 }; //200 is lookup table value - not sure what that is but it makes it more efficient??
     
+    //Pink noise object instantiation
+    PinkNumber pn;
+
     // return std::sin (x);  // sine wave
     // return x / juce::MathConstants<float>::pi;  // saw wave
     // return x < 0.0f ? -1.0f : 1.0f;   // square wave
     
     // variable instantiations
+    juce::LinearSmoothedValue<float> gain { 0.0f };
+    juce::dsp::Panner<float> panner;
     float freq { 440.0f };
     bool bypass { false };
     int routingChoice { 1 };
@@ -85,10 +88,6 @@ private:
     void parameterChanged (const juce::String& parameterID, float newValue) override;
     
     
-    //Pink noise class // from here https://www.firstpr.com.au/dsp/pink-noise/#Voss
-    
-    //Pink noise object instantiation
-    PinkNumber pn;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SIGAudioProcessor)
 };
