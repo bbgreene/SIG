@@ -51,6 +51,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createPar
     auto pRoutingChoice = std::make_unique<juce::AudioParameterChoice>("routing", "Routing", routingSelector, 1);
     auto pSignalType = std::make_unique<juce::AudioParameterChoice>("signal type", "Signal Type", signalTypeSelector, 0);
     
+    
     params.push_back(std::move(pGain));
     params.push_back(std::move(pFreq));
     params.push_back(std::move(pBypass));
@@ -64,6 +65,7 @@ void SIGAudioProcessor::parameterChanged(const juce::String &parameterID, float 
 {
     gain.setTargetValue(juce::Decibels::decibelsToGain(treeState.getRawParameterValue("gain")->load()));
     treeState.getRawParameterValue("freq")->load();
+
     
     if(parameterID == "bypass")
     {
@@ -222,44 +224,15 @@ void SIGAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     {
         if(signalType == 0) //sine
         {
-            osc.process(juce::dsp::ProcessContextReplacing<float> (block));
-                
-            for(int channel = 0; channel < block.getNumChannels(); ++channel)
-            {
-                auto* channelData = block.getChannelPointer(channel);
-
-                for(int sample = 0; sample < block.getNumSamples(); ++sample)
-                {
-                    channelData[sample] *= gain.getNextValue();
-                }
-            }
+            oscProcess(buffer);
         }
         else if (signalType == 1) //white noise
         {
-            for(int channel = 0; channel < block.getNumChannels(); ++channel)
-            {
-                auto* channelData = block.getChannelPointer(channel);
-
-                for(int sample = 0; sample < block.getNumSamples(); ++sample)
-                {
-                    //channelData[sample] = ((float)rand()/RAND_MAX) * 2.0f - 1.0f; // white noise from a forum post - need something to compare this to
-                    channelData[sample] = random.nextFloat(); // from JUCE tutorial, seems the same as above but a bit quieter
-                    channelData[sample] *= gain.getNextValue();
-                }
-            }
+            whiteNoiseProcess(buffer);
         }
-        else if (signalType == 2) //pink noise
+        else if (signalType == 2)//pink noise
         {
-            for(int channel = 0; channel < block.getNumChannels(); ++channel)
-            {
-                auto* channelData = block.getChannelPointer(channel);
-
-                for(int sample = 0; sample < block.getNumSamples(); ++sample)
-                {
-                    channelData[sample] = pn.GetNextValue();
-                    channelData[sample] *= gain.getNextValue() * 0.009; //dropping pink noise output...check pink noise class for reason it is outputting such a high value
-                }
-            }
+            pinkNoiseProcess(buffer);
         }
         panner.process(juce::dsp::ProcessContextReplacing<float> (block));
     }
@@ -282,6 +255,58 @@ float SIGAudioProcessor::panRoutingFunc(int choice)
         default:
             return 0.0f;
             break;
+    }
+}
+//Function for oscillator processing
+void SIGAudioProcessor::oscProcess(juce::AudioBuffer<float> &buffer)
+{
+    auto block = juce::dsp::AudioBlock<float> (buffer);
+    
+    osc.process(juce::dsp::ProcessContextReplacing<float> (block));
+        
+    for(int channel = 0; channel < block.getNumChannels(); ++channel)
+    {
+        auto* channelData = block.getChannelPointer(channel);
+
+        for(int sample = 0; sample < block.getNumSamples(); ++sample)
+        {
+            channelData[sample] *= gain.getNextValue();
+        }
+    }
+}
+
+//Function for white noise processing
+void SIGAudioProcessor::whiteNoiseProcess(juce::AudioBuffer<float> &buffer)
+{
+    auto block = juce::dsp::AudioBlock<float> (buffer);
+    
+    for(int channel = 0; channel < block.getNumChannels(); ++channel)
+    {
+        auto* channelData = block.getChannelPointer(channel);
+
+        for(int sample = 0; sample < block.getNumSamples(); ++sample)
+        {
+            //channelData[sample] = ((float)rand()/RAND_MAX) * 2.0f - 1.0f; // white noise from a forum post - need something to compare this to
+            channelData[sample] = random.nextFloat(); // from JUCE tutorial, seems the same as above but a bit quieter
+            channelData[sample] *= gain.getNextValue();
+        }
+    }
+}
+
+//Function for pink noise processing
+void SIGAudioProcessor::pinkNoiseProcess(juce::AudioBuffer<float> &buffer)
+{
+    auto block = juce::dsp::AudioBlock<float> (buffer);
+    
+    for(int channel = 0; channel < block.getNumChannels(); ++channel)
+    {
+        auto* channelData = block.getChannelPointer(channel);
+
+        for(int sample = 0; sample < block.getNumSamples(); ++sample)
+        {
+            channelData[sample] = pn.GetNextValue();
+            channelData[sample] *= gain.getNextValue() * 0.00849; //dropping pink noise output...check pink noise class for reason it is outputting such a high value
+        }
     }
 }
 

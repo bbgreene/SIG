@@ -75,6 +75,9 @@ private:
     
     //Functions for dsp
     float panRoutingFunc(int choice);
+    void oscProcess(juce::AudioBuffer<float> &buffer);
+    void whiteNoiseProcess(juce::AudioBuffer<float> &buffer);
+    void pinkNoiseProcess(juce::AudioBuffer<float> &buffer);
     
     //Functions for param layout and changes
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
