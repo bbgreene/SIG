@@ -11,6 +11,7 @@
 #pragma once
 #include <JuceHeader.h>
 
+//found here https://www.firstpr.com.au/dsp/pink-noise/#Voss
 
 class PinkNumber
 {
