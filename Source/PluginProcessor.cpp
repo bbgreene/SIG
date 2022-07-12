@@ -48,8 +48,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createPar
     auto pGain = std::make_unique<juce::AudioParameterFloat>("gain", "Gain", juce::NormalisableRange<float>(-120.0f, 0.0, 0.01, 1.0f), -20.0f);
     auto pFreq = std::make_unique<juce::AudioParameterFloat>("freq", "Freq", juce::NormalisableRange<float>(20.0f, 21000.0, 0.01, 0.3f), 440.0f);
     auto pBypass = std::make_unique<juce::AudioParameterBool>("bypass", "Bypass", 0);
-    auto pRoutingChoice = std::make_unique<juce::AudioParameterChoice>("routing", "Routing", routingSelector, 1);
-    auto pSignalType = std::make_unique<juce::AudioParameterChoice>("signal type", "Signal Type", signalTypeSelector, 0);
+//    auto pRoutingChoice = std::make_unique<juce::AudioParameterChoice>("routing", "Routing", routingSelector, 1);
+//    auto pSignalType = std::make_unique<juce::AudioParameterChoice>("signal type", "Signal Type", signalTypeSelector, 0);
+    auto pRoutingChoice = std::make_unique<juce::AudioParameterInt>("routing", "Routing", 0, 2, 1);
+    auto pSignalType = std::make_unique<juce::AudioParameterInt>("signal type", "Signal Type", 0, 2, 0);
     
     
     params.push_back(std::move(pGain));
@@ -313,8 +315,8 @@ bool SIGAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* SIGAudioProcessor::createEditor()
 {
-//    return new SIGAudioProcessorEditor (*this);
-    return new juce::GenericAudioProcessorEditor (*this);
+    return new SIGAudioProcessorEditor (*this);
+//    return new juce::GenericAudioProcessorEditor (*this);
 }
 
 //==============================================================================

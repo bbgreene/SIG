@@ -10,6 +10,11 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "../Source/bbg_gui/Dial.h"
+#include "../Source/bbg_gui/Toggle.h"
+#include "../Source/bbg_gui/PushButton.h"
+#include "../Source/bbg_gui/Menu.h"
+#include "../Source/bbg_gui/Label.h"
 
 //==============================================================================
 /**
@@ -25,6 +30,29 @@ public:
     void resized() override;
 
 private:
+    
+    //dials and buttons
+    bbg_gui::bbg_Dial signalType { " Signal", 0.0, 2.0, 1.0, 0.0, 0.0 };
+    bbg_gui::bbg_PushButton sineButton { "Sine" };
+    bbg_gui::bbg_PushButton whiteButton { "White" };
+    bbg_gui::bbg_PushButton pinkButton { "Pink" };
+    
+    bbg_gui::bbg_Dial routing { " Routing", 0.0, 2.0, 1.0, 1.0, 0.0 };
+    bbg_gui::bbg_PushButton LButton { "L" };
+    bbg_gui::bbg_PushButton LRButton { "L+R" };
+    bbg_gui::bbg_PushButton RButton { "R" };
+    
+    //Attachments
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> signalAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> routingAttachment;
+    
+    
+    //Labels
+    bbg_gui::bbg_dialLabel olumay { "Olumay dsp" };
+    bbg_gui::bbg_dialLabel sigTitle { "S I G" };
+    bbg_gui::bbg_dialLabel sigVersion { "version 1.1" };
+    
+    
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     SIGAudioProcessor& audioProcessor;
