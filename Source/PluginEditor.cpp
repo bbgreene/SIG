@@ -64,6 +64,54 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     };
     addAndMakeVisible(RButton);
     
+    freqAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "freq", freq);
+    freq.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialDotModernStyle);
+    addAndMakeVisible(freq);
+    
+    hundredButton.setClickingTogglesState(false);
+    hundredButton.onClick = [this]()
+    {
+        freq.setValue(100.0);
+    };
+    addAndMakeVisible(hundredButton);
+    
+    oneThousButton.setClickingTogglesState(false);
+    oneThousButton.onClick = [this]()
+    {
+        freq.setValue(1000.0);
+    };
+    addAndMakeVisible(oneThousButton);
+    
+    tenThousButton.setClickingTogglesState(false);
+    tenThousButton.onClick = [this]()
+    {
+        freq.setValue(10000.0);
+    };
+    addAndMakeVisible(tenThousButton);
+    
+    
+//    minusTwentyButton.setClickingTogglesState(false);
+//    minusTwentyButton.onClick = [this]()
+//    {
+//        freq.setValue(-20.0);
+//    };
+//    addAndMakeVisible(minusTwentyButton);
+//
+//    minusTwelveButton.setClickingTogglesState(false);
+//    minusTwelveButton.onClick = [this]()
+//    {
+//        freq.setValue(-12.0);
+//    };
+//    addAndMakeVisible(minusTwelveButton);
+//
+//    minusSixButton.setClickingTogglesState(false);
+//    minusSixButton.onClick = [this]()
+//    {
+//        freq.setValue(-6.0);
+//    };
+//    addAndMakeVisible(minusSixButton);
+    
+    
     //Titles
     sigTitle.setFont(juce::Font (26.0f, juce::Font::plain));
     sigTitle.setJustificationType(juce::Justification::centredLeft);
@@ -109,15 +157,28 @@ void SIGAudioProcessorEditor::resized()
     auto buttonHeight = (getHeight()/7) * 0.5;
     auto buttonTopMargin = getHeight() * 0.23;
     auto buttonGap = getWidth() * 0.01428;
-    auto buttonMiddleGap = 17.0; //what's left over
+    auto buttonRightSideStartPos = (getWidth() / 2) + leftMargin - 8;
     
     sineButton.setBounds(leftMargin, buttonTopMargin, buttonWidth, buttonHeight);
     whiteButton.setBounds(sineButton.getRight() + buttonGap, buttonTopMargin, buttonWidth, buttonHeight);
     pinkButton.setBounds(whiteButton.getRight() + buttonGap, buttonTopMargin, buttonWidth, buttonHeight);
     
-    LButton.setBounds(pinkButton.getRight() + buttonMiddleGap, buttonTopMargin, buttonWidth, buttonHeight);
+    LButton.setBounds(buttonRightSideStartPos, buttonTopMargin, buttonWidth, buttonHeight);
     LRButton.setBounds(LButton.getRight() + buttonGap, buttonTopMargin, buttonWidth, buttonHeight);
     RButton.setBounds(LRButton.getRight() + buttonGap, buttonTopMargin, buttonWidth, buttonHeight);
+    
+    hundredButton.setBounds(leftMargin, buttonTopMargin + 80, buttonWidth, buttonHeight);
+    oneThousButton.setBounds(hundredButton.getRight() + buttonGap, buttonTopMargin + 80, buttonWidth, buttonHeight);
+    tenThousButton.setBounds(oneThousButton.getRight() + buttonGap, buttonTopMargin + 80, buttonWidth, buttonHeight);
+    
+//    minusTwentyButton.setBounds(leftMargin, buttonTopMargin + 80, buttonWidth, buttonHeight);
+//    minusTwelveButton.setBounds(minusTwentyButton.getRight() + buttonGap, buttonTopMargin + 80, buttonWidth, buttonHeight);
+//    minusSixButton.setBounds(minusTwelveButton.getRight() + buttonGap, buttonTopMargin + 80, buttonWidth, buttonHeight);
+    
+    auto dialSize = (getWidth() * 0.5) - 75;
+    auto freqDialXPos = 37.5;
+    
+    freq.setBounds(freqDialXPos, 200, dialSize, dialSize);
     
     auto olumayY = 325.0;//getHeight() * 0.9596;
     auto olumayWidth = getWidth() * 0.3;

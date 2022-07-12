@@ -42,9 +42,19 @@ private:
     bbg_gui::bbg_PushButton LRButton { "L+R" };
     bbg_gui::bbg_PushButton RButton { "R" };
     
+    bbg_gui::bbg_Dial freq { " Freq", 0.0, 21000.0, 1.0, 440.0, 0.0 };
+    bbg_gui::bbg_PushButton hundredButton { "100Hz" };
+    bbg_gui::bbg_PushButton oneThousButton { "1kHz" };
+    bbg_gui::bbg_PushButton tenThousButton { "10kHz" };
+    
+//    bbg_gui::bbg_PushButton minusTwentyButton { "-20dB" };
+//    bbg_gui::bbg_PushButton minusTwelveButton { "-12dB" };
+//    bbg_gui::bbg_PushButton minusSixButton { "-6dB" };
+    
     //Attachments
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> signalAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> routingAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> freqAttachment;
     
     
     //Labels
