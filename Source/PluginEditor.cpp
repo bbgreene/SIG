@@ -124,14 +124,14 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     sigTitle.setColour(juce::Label::textColourId, juce::Colours::darkslategrey);
     addAndMakeVisible(sigTitle);
     
-    sigVersion.setFont(juce::Font (18.0f, juce::Font::plain));
+    sigVersion.setFont(juce::Font (16.0f, juce::Font::plain));
     sigVersion.setJustificationType(juce::Justification::centredLeft);
-    sigVersion.setColour(juce::Label::textColourId, juce::Colours::mintcream);
+    sigVersion.setColour(juce::Label::textColourId, juce::Colours::dimgrey.brighter());
     addAndMakeVisible(sigVersion);
     
     olumay.setFont(juce::Font (16.0f, juce::Font::plain));
     olumay.setJustificationType(juce::Justification::centredLeft);
-    olumay.setColour(juce::Label::textColourId, juce::Colours::rebeccapurple);
+    olumay.setColour(juce::Label::textColourId, juce::Colours::darkslategrey);
     addAndMakeVisible(olumay);
     
     // Resizing
@@ -152,7 +152,7 @@ SIGAudioProcessorEditor::~SIGAudioProcessorEditor()
 void SIGAudioProcessorEditor::paint (juce::Graphics& g)
 {
     juce::Rectangle<int> background = getLocalBounds();
-    g.setGradientFill(juce::ColourGradient::vertical(juce::Colours::lightskyblue, getHeight() - getHeight(), juce::Colours::lightskyblue.darker(), getHeight()));
+    g.setGradientFill(juce::ColourGradient::vertical(juce::Colours::powderblue, getHeight() * 0.78, juce::Colours::lightskyblue, getHeight()));
     g.fillRect(background);
 }
 
@@ -163,6 +163,7 @@ void SIGAudioProcessorEditor::resized()
     auto freqDialXPos = (getWidth() - (dialSize * 2)) / 3;
     auto freqDialYPos = getWidth() * 0.571429;
     auto leftMargin = getHeight() * 0.05;
+    
     auto buttonWidth = getWidth() * 0.13;
     auto buttonHeight = (getHeight()/7) * 0.5;
     auto buttonTopMargin = getHeight() * 0.23;
