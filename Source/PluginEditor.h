@@ -47,14 +47,19 @@ private:
     bbg_gui::bbg_PushButton oneThousButton { "1kHz" };
     bbg_gui::bbg_PushButton tenThousButton { "10kHz" };
     
-//    bbg_gui::bbg_PushButton minusTwentyButton { "-20dB" };
-//    bbg_gui::bbg_PushButton minusTwelveButton { "-12dB" };
-//    bbg_gui::bbg_PushButton minusSixButton { "-6dB" };
+    bbg_gui::bbg_Dial gain { " Gain", -120.0, 0.0, 0.1, -20.0, 0.0 };
+    bbg_gui::bbg_PushButton minusTwentyButton { "-20dB" };
+    bbg_gui::bbg_PushButton minusTwelveButton { "-12dB" };
+    bbg_gui::bbg_PushButton minusSixButton { "-6dB" };
+    
+    bbg_gui::bbg_PushButton onOffSwitch { "On" };
     
     //Attachments
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> signalAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> routingAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> freqAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> onOffAttachment;
     
     
     //Labels

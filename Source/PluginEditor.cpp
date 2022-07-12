@@ -90,27 +90,33 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     addAndMakeVisible(tenThousButton);
     
     
-//    minusTwentyButton.setClickingTogglesState(false);
-//    minusTwentyButton.onClick = [this]()
-//    {
-//        freq.setValue(-20.0);
-//    };
-//    addAndMakeVisible(minusTwentyButton);
-//
-//    minusTwelveButton.setClickingTogglesState(false);
-//    minusTwelveButton.onClick = [this]()
-//    {
-//        freq.setValue(-12.0);
-//    };
-//    addAndMakeVisible(minusTwelveButton);
-//
-//    minusSixButton.setClickingTogglesState(false);
-//    minusSixButton.onClick = [this]()
-//    {
-//        freq.setValue(-6.0);
-//    };
-//    addAndMakeVisible(minusSixButton);
+    gainAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "gain", gain);
+    gain.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialDotModernStyle);
+    addAndMakeVisible(gain);
     
+    minusTwentyButton.setClickingTogglesState(false);
+    minusTwentyButton.onClick = [this]()
+    {
+        gain.setValue(-20.0);
+    };
+    addAndMakeVisible(minusTwentyButton);
+
+    minusTwelveButton.setClickingTogglesState(false);
+    minusTwelveButton.onClick = [this]()
+    {
+        gain.setValue(-12.0);
+    };
+    addAndMakeVisible(minusTwelveButton);
+
+    minusSixButton.setClickingTogglesState(false);
+    minusSixButton.onClick = [this]()
+    {
+        gain.setValue(-6.0);
+    };
+    addAndMakeVisible(minusSixButton);
+    
+    onOffAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "bypass", onOffSwitch);
+    addAndMakeVisible(onOffSwitch);
     
     //Titles
     sigTitle.setFont(juce::Font (26.0f, juce::Font::plain));
@@ -135,7 +141,7 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (350, 350);
+    setSize (270, 350);
 }
 
 SIGAudioProcessorEditor::~SIGAudioProcessorEditor()
@@ -152,6 +158,8 @@ void SIGAudioProcessorEditor::paint (juce::Graphics& g)
 
 void SIGAudioProcessorEditor::resized()
 {
+    auto dialSize = getHeight() * 0.33;
+    auto freqDialXPos = ((getWidth() * 0.5) - dialSize) * 0.5;
     auto leftMargin = 20.0f;
     auto buttonWidth = getWidth() * 0.13;
     auto buttonHeight = (getHeight()/7) * 0.5;
@@ -159,26 +167,24 @@ void SIGAudioProcessorEditor::resized()
     auto buttonGap = getWidth() * 0.01428;
     auto buttonRightSideStartPos = (getWidth() / 2) + leftMargin - 8;
     
+    freq.setBounds(freqDialXPos, 200, dialSize, dialSize);
+    gain.setBounds(freq.getRight() + freqDialXPos, 200, dialSize, dialSize);
+    
     sineButton.setBounds(leftMargin, buttonTopMargin, buttonWidth, buttonHeight);
     whiteButton.setBounds(sineButton.getRight() + buttonGap, buttonTopMargin, buttonWidth, buttonHeight);
     pinkButton.setBounds(whiteButton.getRight() + buttonGap, buttonTopMargin, buttonWidth, buttonHeight);
-    
+
     LButton.setBounds(buttonRightSideStartPos, buttonTopMargin, buttonWidth, buttonHeight);
     LRButton.setBounds(LButton.getRight() + buttonGap, buttonTopMargin, buttonWidth, buttonHeight);
     RButton.setBounds(LRButton.getRight() + buttonGap, buttonTopMargin, buttonWidth, buttonHeight);
-    
+
     hundredButton.setBounds(leftMargin, buttonTopMargin + 80, buttonWidth, buttonHeight);
     oneThousButton.setBounds(hundredButton.getRight() + buttonGap, buttonTopMargin + 80, buttonWidth, buttonHeight);
     tenThousButton.setBounds(oneThousButton.getRight() + buttonGap, buttonTopMargin + 80, buttonWidth, buttonHeight);
     
-//    minusTwentyButton.setBounds(leftMargin, buttonTopMargin + 80, buttonWidth, buttonHeight);
-//    minusTwelveButton.setBounds(minusTwentyButton.getRight() + buttonGap, buttonTopMargin + 80, buttonWidth, buttonHeight);
-//    minusSixButton.setBounds(minusTwelveButton.getRight() + buttonGap, buttonTopMargin + 80, buttonWidth, buttonHeight);
-    
-    auto dialSize = (getWidth() * 0.5) - 75;
-    auto freqDialXPos = 37.5;
-    
-    freq.setBounds(freqDialXPos, 200, dialSize, dialSize);
+    minusTwentyButton.setBounds(buttonRightSideStartPos, buttonTopMargin + 80, buttonWidth, buttonHeight);
+    minusTwelveButton.setBounds(minusTwentyButton.getRight() + buttonGap, buttonTopMargin + 80, buttonWidth, buttonHeight);
+    minusSixButton.setBounds(minusTwelveButton.getRight() + buttonGap, buttonTopMargin + 80, buttonWidth, buttonHeight);
     
     auto olumayY = 325.0;//getHeight() * 0.9596;
     auto olumayWidth = getWidth() * 0.3;
@@ -189,5 +195,7 @@ void SIGAudioProcessorEditor::resized()
     olumay.setBounds(leftMargin, olumayY, olumayWidth, allTitlesHeight);
     sigTitle.setBounds(leftMargin, titlesTopMargin, allTitlesHeight * 3.0, allTitlesHeight);
     sigVersion.setBounds(sigTitle.getRight(), titlesTopMargin, sigVersionWidth, allTitlesHeight);
+    
+    onOffSwitch.setBounds(buttonRightSideStartPos, titlesTopMargin, buttonWidth, buttonHeight);
     
 }
