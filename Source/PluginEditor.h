@@ -36,10 +36,9 @@ private:
     bbg_gui::bbg_PushButton whiteButton { "White" };
     bbg_gui::bbg_PushButton pinkButton { "Pink" };
     
-    bbg_gui::bbg_Dial routing { " Routing", 0.0, 2.0, 1.0, 1.0, 0.0 };
-    bbg_gui::bbg_PushButton LButton { "L" };
-    bbg_gui::bbg_PushButton LRButton { "L+R" };
-    bbg_gui::bbg_PushButton RButton { "R" };
+    bbg_gui::bbg_PushButton lButton { "L" };
+    bbg_gui::bbg_PushButton lRButton { "L+R" };
+    bbg_gui::bbg_PushButton rButton { "R" };
     
     bbg_gui::bbg_Dial freq { " Hz", 0.0, 21000.0, 1.0, 440.0, 0.0 };
     bbg_gui::bbg_PushButton hundredButton { "100Hz" };
@@ -57,6 +56,10 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> sineAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> whiteAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> pinkAttachment;
+    
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> lAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> lrAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> rAttachment;
     
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> routingAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> freqAttachment;

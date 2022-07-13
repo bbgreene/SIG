@@ -19,118 +19,37 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     // Dials and buttons with their respective attachments
 
     sineAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "sine", sineButton);
+    whiteAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "white", whiteButton);
+    pinkAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "pink", pinkButton);
     
     sineButton.setClickingTogglesState(true);
-    sineButton.onClick = [this] ()
-    {
-        if(sineButton.getToggleState())
-        {
-            sineButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
-            whiteButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-            pinkButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        }
-    };
+    sineButton.setRadioGroupId(1);
     addAndMakeVisible(sineButton);
 
     whiteButton.setClickingTogglesState(true);
-    whiteButton.onClick = [this] ()
-    {
-    if(whiteButton.getToggleState())
-        {
-            whiteButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
-            sineButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-            pinkButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        }
-    };
+    whiteButton.setRadioGroupId(1);
     addAndMakeVisible(whiteButton);
     
     pinkButton.setClickingTogglesState(true);
-    pinkButton.onClick = [this] ()
-    {
-        if(pinkButton.getToggleState())
-        {
-            pinkButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
-            sineButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-            whiteButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        }
-    };
+    pinkButton.setRadioGroupId(1);
     addAndMakeVisible(pinkButton);
+
+    lAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "l", lButton);
+    lrAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "lr", lRButton);
+    rAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "r", rButton);
     
-//    sineButton.onClick = [this]()
-//    {
-//        if(static_cast<int>(sineButton.getToggleState()))
-//        {
-//            sineButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
-////            whiteButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-////            pinkButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-//        }
-//    };
-//    addAndMakeVisible(sineButton);
-//
-//    whiteAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "white", whiteButton);
-//
-//    whiteButton.onClick = [this]()
-//    {
-//        if(static_cast<int>(whiteButton.getToggleState()))
-//        {
-//            whiteButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
-////            sineButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-////            pinkButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-//        }
-//    };
-//    addAndMakeVisible(whiteButton);
-//
-//    pinkAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "pink", pinkButton);
-//    pinkButton.onClick = [this]()
-//    {
-//        if(static_cast<int>(pinkButton.getToggleState()))
-//        {
-//            pinkButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
-////            sineButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-////            whiteButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-//        }
-//    };
-//    addAndMakeVisible(pinkButton);
+    lButton.setClickingTogglesState(true);
+    lButton.setRadioGroupId(2);
+    addAndMakeVisible(lButton);
+
+    lRButton.setClickingTogglesState(true);
+    lRButton.setRadioGroupId(2);
+    addAndMakeVisible(lRButton);
     
-    
-    routingAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "routing", routing);
-    
-    LButton.onClick = [this]()
-    {
-        routing.setValue(0);
-        if(static_cast<int>(LButton.getToggleState()))
-        {
-        LButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
-        LRButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        RButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        }
-    };
-    addAndMakeVisible(LButton);
-    
-    LRButton.onClick = [this]()
-    {
-        routing.setValue(1);
-        if(static_cast<int>(LRButton.getToggleState()))
-        {
-        LRButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
-        LButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        RButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        }
-    };
-    addAndMakeVisible(LRButton);
-    
-    RButton.onClick = [this]()
-    {
-        routing.setValue(2);
-        if(static_cast<int>(RButton.getToggleState()))
-        {
-        RButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
-        LRButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        LButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        }
-    };
-        addAndMakeVisible(RButton);
-    
+    rButton.setClickingTogglesState(true);
+    rButton.setRadioGroupId(2);
+    addAndMakeVisible(rButton);
+
     freqAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "freq", freq);
     freq.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     addAndMakeVisible(freq);
@@ -300,9 +219,9 @@ void SIGAudioProcessorEditor::resized()
     whiteButton.setBounds(sineButton.getRight() + buttonGap, buttonTopMargin, buttonWidth, buttonHeight);
     pinkButton.setBounds(whiteButton.getRight() + buttonGap, buttonTopMargin, buttonWidth, buttonHeight);
 
-    LButton.setBounds(buttonRightSideStartPos, buttonTopMargin, buttonWidth, buttonHeight);
-    LRButton.setBounds(LButton.getRight() + buttonGap, buttonTopMargin, buttonWidth, buttonHeight);
-    RButton.setBounds(LRButton.getRight() + buttonGap, buttonTopMargin, buttonWidth, buttonHeight);
+    lButton.setBounds(buttonRightSideStartPos, buttonTopMargin, buttonWidth, buttonHeight);
+    lRButton.setBounds(lButton.getRight() + buttonGap, buttonTopMargin, buttonWidth, buttonHeight);
+    rButton.setBounds(lRButton.getRight() + buttonGap, buttonTopMargin, buttonWidth, buttonHeight);
 
     hundredButton.setBounds(leftMargin, buttonYPosSecondRow, buttonWidth, buttonHeight);
     oneThousButton.setBounds(hundredButton.getRight() + buttonGap, buttonYPosSecondRow, buttonWidth, buttonHeight);
@@ -313,7 +232,7 @@ void SIGAudioProcessorEditor::resized()
     minusSixButton.setBounds(minusTwelveButton.getRight() + buttonGap, buttonYPosSecondRow, buttonWidth, buttonHeight);
     
     auto borderColOneX = sineButton.getX() * 0.52;
-    auto borderColTwoX = LButton.getX() * 0.95;
+    auto borderColTwoX = lButton.getX() * 0.95;
     auto borderRowOneY = sineButton.getY() * 0.73;
     auto borderRowTwoY = hundredButton.getY() * 0.86;
     auto borderWidth = sineButton.getWidth() * 3.6;

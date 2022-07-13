@@ -26,11 +26,12 @@ SIGAudioProcessor::SIGAudioProcessor()
     treeState.addParameterListener("freq", this);
     treeState.addParameterListener("bypass", this);
     treeState.addParameterListener("routing", this);
-//    treeState.addParameterListener("signal type", this);
-    
     treeState.addParameterListener("sine", this);
     treeState.addParameterListener("white", this);
     treeState.addParameterListener("pink", this);
+    treeState.addParameterListener("l", this);
+    treeState.addParameterListener("lr", this);
+    treeState.addParameterListener("r", this);
 }
 
 SIGAudioProcessor::~SIGAudioProcessor()
@@ -39,11 +40,12 @@ SIGAudioProcessor::~SIGAudioProcessor()
     treeState.removeParameterListener("freq", this);
     treeState.removeParameterListener("bypass", this);
     treeState.removeParameterListener("routing", this);
-//    treeState.removeParameterListener("signal type", this);
-    
     treeState.removeParameterListener("sine", this);
     treeState.removeParameterListener("white", this);
     treeState.removeParameterListener("pink", this);
+    treeState.removeParameterListener("l", this);
+    treeState.removeParameterListener("lr", this);
+    treeState.removeParameterListener("r", this);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createParameterLayout()
@@ -56,25 +58,22 @@ juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createPar
     auto pGain = std::make_unique<juce::AudioParameterFloat>("gain", "Gain", juce::NormalisableRange<float>(-120.0f, 0.0, 0.01, 1.0f), -20.0f);
     auto pFreq = std::make_unique<juce::AudioParameterFloat>("freq", "Freq", juce::NormalisableRange<float>(20.0f, 21000.0, 0.01, 0.3f), 440.0f);
     auto pBypass = std::make_unique<juce::AudioParameterBool>("bypass", "Bypass", 0);
-//    auto pRoutingChoice = std::make_unique<juce::AudioParameterChoice>("routing", "Routing", routingSelector, 1);
-//    auto pSignalType = std::make_unique<juce::AudioParameterChoice>("signal type", "Signal Type", signalTypeSelector, 0);
-    auto pRoutingChoice = std::make_unique<juce::AudioParameterInt>("routing", "Routing", 0, 2, 1);
-//    auto pSignalType = std::make_unique<juce::AudioParameterInt>("signal type", "Signal Type", 0, 2, 0);
-    
     auto pSineChoice = std::make_unique<juce::AudioParameterBool>("sine", "Sine", 1);
     auto pWhiteChoice = std::make_unique<juce::AudioParameterBool>("white", "White", 0);
     auto pPinkChoice = std::make_unique<juce::AudioParameterBool>("pink", "Pink", 0);
-    
+    auto pLChoice = std::make_unique<juce::AudioParameterBool>("l", "L", 0);
+    auto pLRChoice = std::make_unique<juce::AudioParameterBool>("lr", "LR", 1);
+    auto pRChoice = std::make_unique<juce::AudioParameterBool>("r", "R", 0);
     
     params.push_back(std::move(pGain));
     params.push_back(std::move(pFreq));
     params.push_back(std::move(pBypass));
-    params.push_back(std::move(pRoutingChoice));
-//    params.push_back(std::move(pSignalType));
     params.push_back(std::move(pSineChoice));
     params.push_back(std::move(pWhiteChoice));
     params.push_back(std::move(pPinkChoice));
-    
+    params.push_back(std::move(pLChoice));
+    params.push_back(std::move(pLRChoice));
+    params.push_back(std::move(pRChoice));
     
     return { params.begin(), params.end() };
 }
@@ -93,10 +92,6 @@ void SIGAudioProcessor::parameterChanged(const juce::String &parameterID, float 
     {
         routingChoice = newValue;
     }
-//    if(parameterID == "signal type")
-//    {
-//        signalType = newValue;
-//    }
     auto sineChoice = treeState.getRawParameterValue("sine")->load();
     auto whiteChoice = treeState.getRawParameterValue("white")->load();
     auto pinkChoice = treeState.getRawParameterValue("pink")->load();
@@ -114,7 +109,22 @@ void SIGAudioProcessor::parameterChanged(const juce::String &parameterID, float 
         signalType = 2;
     }
     
+    auto lChoice = treeState.getRawParameterValue("l")->load();
+    auto lRChoice = treeState.getRawParameterValue("lr")->load();
+    auto rChoice = treeState.getRawParameterValue("r")->load();
     
+    if(lChoice == 1 && lRChoice == 0 && rChoice == 0)
+    {
+        routingChoice = -1;
+    }
+    if(lChoice == 0 && lRChoice == 1 && rChoice == 0)
+    {
+        routingChoice = 0;
+    }
+    if(lChoice == 0 && lRChoice == 0 && rChoice == 1)
+    {
+        routingChoice = 1;
+    }
 }
 
 //==============================================================================
@@ -196,13 +206,14 @@ void SIGAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     panner.reset();
     panner.prepare(spec);
     panner.setRule(juce::dsp::PannerRule::balanced); // L, L+R, R are all the same volume
-    
-    routingChoice = treeState.getRawParameterValue("routing")->load();
-//    signalType = treeState.getRawParameterValue("signal type")->load();
-    
+        
     treeState.getRawParameterValue("sine")->load();
     treeState.getRawParameterValue("white")->load();
     treeState.getRawParameterValue("pink")->load();
+    
+    treeState.getRawParameterValue("l")->load();
+    treeState.getRawParameterValue("lr")->load();
+    treeState.getRawParameterValue("r")->load();
 }
 
 void SIGAudioProcessor::releaseResources()
@@ -248,6 +259,23 @@ void SIGAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     
     //Target value of gain coming from gain slider
     gain.setTargetValue(juce::Decibels::decibelsToGain(treeState.getRawParameterValue("gain")->load()));
+    
+    auto lChoice = treeState.getRawParameterValue("l")->load();
+    auto lRChoice = treeState.getRawParameterValue("lr")->load();
+    auto rChoice = treeState.getRawParameterValue("r")->load();
+    
+    if(lChoice == 1 && lRChoice == 0 && rChoice == 0)
+    {
+        routingChoice = 0;
+    }
+    if(lChoice == 0 && lRChoice == 1 && rChoice == 0)
+    {
+        routingChoice = 1;
+    }
+    if(lChoice == 0 && lRChoice == 0 && rChoice == 1)
+    {
+        routingChoice = 2;
+    }
     
     // panner L, L+R, R choices coming from panRoutingFunc
     panner.setPan(panRoutingFunc(routingChoice));
