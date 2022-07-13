@@ -19,73 +19,118 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     // Dials and buttons with their respective attachments
     signalAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "signal type", signalType);
     
-    sineButton.setClickingTogglesState(false);
     sineButton.onClick = [this]()
     {
         signalType.setValue(0);
+        if(static_cast<int>(sineButton.getToggleState()))
+        {
+        sineButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
+        whiteButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        pinkButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        }
     };
     addAndMakeVisible(sineButton);
     
-    whiteButton.setClickingTogglesState(false);
     whiteButton.onClick = [this]()
     {
         signalType.setValue(1);
+        if(static_cast<int>(whiteButton.getToggleState()))
+        {
+        whiteButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
+        sineButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        pinkButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        }
     };
     addAndMakeVisible(whiteButton);
     
-    pinkButton.setClickingTogglesState(false);
     pinkButton.onClick = [this]()
     {
         signalType.setValue(2);
+        if(static_cast<int>(pinkButton.getToggleState()))
+        {
+        pinkButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
+        sineButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        whiteButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        }
     };
     addAndMakeVisible(pinkButton);
     
     
     routingAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "routing", routing);
     
-    LButton.setClickingTogglesState(false);
     LButton.onClick = [this]()
     {
         routing.setValue(0);
+        if(static_cast<int>(LButton.getToggleState()))
+        {
+        LButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
+        LRButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        RButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        }
     };
     addAndMakeVisible(LButton);
     
-    LRButton.setClickingTogglesState(false);
     LRButton.onClick = [this]()
     {
         routing.setValue(1);
+        if(static_cast<int>(LRButton.getToggleState()))
+        {
+        LRButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
+        LButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        RButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        }
     };
     addAndMakeVisible(LRButton);
     
-    RButton.setClickingTogglesState(false);
     RButton.onClick = [this]()
     {
         routing.setValue(2);
+        if(static_cast<int>(RButton.getToggleState()))
+        {
+        RButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
+        LRButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        LButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        }
     };
-    addAndMakeVisible(RButton);
+        addAndMakeVisible(RButton);
     
     freqAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "freq", freq);
     freq.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     addAndMakeVisible(freq);
     
-    hundredButton.setClickingTogglesState(false);
     hundredButton.onClick = [this]()
     {
         freq.setValue(100.0);
+        if(static_cast<int>(hundredButton.getToggleState()))
+        {
+        hundredButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
+        oneThousButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        tenThousButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        }
     };
     addAndMakeVisible(hundredButton);
     
-    oneThousButton.setClickingTogglesState(false);
     oneThousButton.onClick = [this]()
     {
         freq.setValue(1000.0);
+        if(static_cast<int>(oneThousButton.getToggleState()))
+        {
+        oneThousButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
+        hundredButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        tenThousButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        }
     };
     addAndMakeVisible(oneThousButton);
     
-    tenThousButton.setClickingTogglesState(false);
     tenThousButton.onClick = [this]()
     {
         freq.setValue(10000.0);
+        if(static_cast<int>(tenThousButton.getToggleState()))
+        {
+        tenThousButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
+        hundredButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        oneThousButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        }
     };
     addAndMakeVisible(tenThousButton);
     
@@ -94,24 +139,39 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     gain.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     addAndMakeVisible(gain);
     
-    minusTwentyButton.setClickingTogglesState(false);
     minusTwentyButton.onClick = [this]()
     {
         gain.setValue(-20.0);
+        if(static_cast<int>(minusTwentyButton.getToggleState()))
+        {
+        minusTwentyButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
+        minusTwelveButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        minusSixButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        }
     };
     addAndMakeVisible(minusTwentyButton);
 
-    minusTwelveButton.setClickingTogglesState(false);
     minusTwelveButton.onClick = [this]()
     {
         gain.setValue(-12.0);
+        if(static_cast<int>(minusTwelveButton.getToggleState()))
+        {
+        minusTwelveButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
+        minusTwentyButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        minusSixButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        }
     };
     addAndMakeVisible(minusTwelveButton);
 
-    minusSixButton.setClickingTogglesState(false);
     minusSixButton.onClick = [this]()
     {
         gain.setValue(-6.0);
+        if(static_cast<int>(minusSixButton.getToggleState()))
+        {
+        minusSixButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
+        minusTwentyButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        minusTwelveButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+        }
     };
     addAndMakeVisible(minusSixButton);
     
