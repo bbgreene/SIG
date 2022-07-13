@@ -32,7 +32,6 @@ public:
 private:
     
     //dials and buttons
-    bbg_gui::bbg_Dial signalType { " Signal", 0.0, 2.0, 1.0, 0.0, 0.0 };
     bbg_gui::bbg_PushButton sineButton { "Sine" };
     bbg_gui::bbg_PushButton whiteButton { "White" };
     bbg_gui::bbg_PushButton pinkButton { "Pink" };
@@ -54,8 +53,11 @@ private:
     
     bbg_gui::bbg_PushButton onOffSwitch { "On" };
     
-    //Attachments
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> signalAttachment;
+    //Attachments    
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> sineAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> whiteAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> pinkAttachment;
+    
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> routingAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> freqAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAttachment;

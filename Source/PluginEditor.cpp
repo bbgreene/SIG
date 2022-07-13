@@ -17,43 +17,80 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     juce::LookAndFeel::getDefaultLookAndFeel().setDefaultSansSerifTypefaceName ("Avenir Next");
     
     // Dials and buttons with their respective attachments
-    signalAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "signal type", signalType);
+
+    sineAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "sine", sineButton);
     
-    sineButton.onClick = [this]()
+    sineButton.setClickingTogglesState(true);
+    sineButton.onClick = [this] ()
     {
-        signalType.setValue(0);
-        if(static_cast<int>(sineButton.getToggleState()))
+        if(sineButton.getToggleState())
         {
-        sineButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
-        whiteButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        pinkButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+            sineButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
+            whiteButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+            pinkButton.setToggleState(false, juce::NotificationType::dontSendNotification);
         }
     };
     addAndMakeVisible(sineButton);
-    
-    whiteButton.onClick = [this]()
+
+    whiteButton.setClickingTogglesState(true);
+    whiteButton.onClick = [this] ()
     {
-        signalType.setValue(1);
-        if(static_cast<int>(whiteButton.getToggleState()))
+    if(whiteButton.getToggleState())
         {
-        whiteButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
-        sineButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        pinkButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+            whiteButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
+            sineButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+            pinkButton.setToggleState(false, juce::NotificationType::dontSendNotification);
         }
     };
     addAndMakeVisible(whiteButton);
     
-    pinkButton.onClick = [this]()
+    pinkButton.setClickingTogglesState(true);
+    pinkButton.onClick = [this] ()
     {
-        signalType.setValue(2);
-        if(static_cast<int>(pinkButton.getToggleState()))
+        if(pinkButton.getToggleState())
         {
-        pinkButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
-        sineButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        whiteButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+            pinkButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
+            sineButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+            whiteButton.setToggleState(false, juce::NotificationType::dontSendNotification);
         }
     };
     addAndMakeVisible(pinkButton);
+    
+//    sineButton.onClick = [this]()
+//    {
+//        if(static_cast<int>(sineButton.getToggleState()))
+//        {
+//            sineButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
+////            whiteButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+////            pinkButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+//        }
+//    };
+//    addAndMakeVisible(sineButton);
+//
+//    whiteAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "white", whiteButton);
+//
+//    whiteButton.onClick = [this]()
+//    {
+//        if(static_cast<int>(whiteButton.getToggleState()))
+//        {
+//            whiteButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
+////            sineButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+////            pinkButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+//        }
+//    };
+//    addAndMakeVisible(whiteButton);
+//
+//    pinkAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "pink", pinkButton);
+//    pinkButton.onClick = [this]()
+//    {
+//        if(static_cast<int>(pinkButton.getToggleState()))
+//        {
+//            pinkButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
+////            sineButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+////            whiteButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+//        }
+//    };
+//    addAndMakeVisible(pinkButton);
     
     
     routingAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "routing", routing);
