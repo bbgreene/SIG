@@ -32,6 +32,9 @@ SIGAudioProcessor::SIGAudioProcessor()
     treeState.addParameterListener("l", this);
     treeState.addParameterListener("lr", this);
     treeState.addParameterListener("r", this);
+    treeState.addParameterListener("hundred", this);
+    treeState.addParameterListener("thousand", this);
+    treeState.addParameterListener("tenThous", this);
 }
 
 SIGAudioProcessor::~SIGAudioProcessor()
@@ -46,14 +49,14 @@ SIGAudioProcessor::~SIGAudioProcessor()
     treeState.removeParameterListener("l", this);
     treeState.removeParameterListener("lr", this);
     treeState.removeParameterListener("r", this);
+    treeState.removeParameterListener("hundred", this);
+    treeState.removeParameterListener("thousand", this);
+    treeState.removeParameterListener("tenThous", this);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createParameterLayout()
 {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
-    
-    juce::StringArray routingSelector = { "L", "L+R", "R" };
-    juce::StringArray signalTypeSelector = { "Sine", "White", "Pink" };
     
     auto pGain = std::make_unique<juce::AudioParameterFloat>("gain", "Gain", juce::NormalisableRange<float>(-120.0f, 0.0, 0.01, 1.0f), -20.0f);
     auto pFreq = std::make_unique<juce::AudioParameterFloat>("freq", "Freq", juce::NormalisableRange<float>(20.0f, 21000.0, 0.01, 0.3f), 440.0f);
@@ -64,6 +67,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createPar
     auto pLChoice = std::make_unique<juce::AudioParameterBool>("l", "L", 0);
     auto pLRChoice = std::make_unique<juce::AudioParameterBool>("lr", "LR", 1);
     auto pRChoice = std::make_unique<juce::AudioParameterBool>("r", "R", 0);
+    auto pHundred = std::make_unique<juce::AudioParameterBool>("hundred", "Hundred", 0);
+    auto pThousand = std::make_unique<juce::AudioParameterBool>("thousand", "Thousand", 0);
+    auto pTenThousand = std::make_unique<juce::AudioParameterBool>("tenThous", "tenThous", 0);
     
     params.push_back(std::move(pGain));
     params.push_back(std::move(pFreq));
@@ -74,6 +80,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createPar
     params.push_back(std::move(pLChoice));
     params.push_back(std::move(pLRChoice));
     params.push_back(std::move(pRChoice));
+    params.push_back(std::move(pHundred));
+    params.push_back(std::move(pThousand));
+    params.push_back(std::move(pTenThousand));
     
     return { params.begin(), params.end() };
 }
@@ -83,7 +92,6 @@ void SIGAudioProcessor::parameterChanged(const juce::String &parameterID, float 
     gain.setTargetValue(juce::Decibels::decibelsToGain(treeState.getRawParameterValue("gain")->load()));
     treeState.getRawParameterValue("freq")->load();
 
-    
     if(parameterID == "bypass")
     {
         bypass = newValue;
@@ -125,6 +133,10 @@ void SIGAudioProcessor::parameterChanged(const juce::String &parameterID, float 
     {
         routingChoice = 1;
     }
+    
+    treeState.getRawParameterValue("hundred")->load();
+    treeState.getRawParameterValue("thousand")->load();
+    treeState.getRawParameterValue("tenThous")->load();
 }
 
 //==============================================================================
@@ -214,6 +226,10 @@ void SIGAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     treeState.getRawParameterValue("l")->load();
     treeState.getRawParameterValue("lr")->load();
     treeState.getRawParameterValue("r")->load();
+    
+    treeState.getRawParameterValue("hundred")->load();
+    treeState.getRawParameterValue("thousand")->load();
+    treeState.getRawParameterValue("tenThous")->load();
 }
 
 void SIGAudioProcessor::releaseResources()

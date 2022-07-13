@@ -54,39 +54,31 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     freq.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     addAndMakeVisible(freq);
     
+    hundredAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "hundred", hundredButton);
+    oneThousAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "thousand", oneThousButton);
+    tenThousAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "tenThous", tenThousButton);
+    
+    hundredButton.setClickingTogglesState(true);
+    hundredButton.setRadioGroupId(3);
     hundredButton.onClick = [this]()
     {
         freq.setValue(100.0);
-        if(static_cast<int>(hundredButton.getToggleState()))
-        {
-        hundredButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
-        oneThousButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        tenThousButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        }
     };
     addAndMakeVisible(hundredButton);
     
+    oneThousButton.setClickingTogglesState(true);
+    oneThousButton.setRadioGroupId(3);
     oneThousButton.onClick = [this]()
     {
         freq.setValue(1000.0);
-        if(static_cast<int>(oneThousButton.getToggleState()))
-        {
-        oneThousButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
-        hundredButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        tenThousButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        }
     };
     addAndMakeVisible(oneThousButton);
     
+    tenThousButton.setClickingTogglesState(true);
+    tenThousButton.setRadioGroupId(3);
     tenThousButton.onClick = [this]()
     {
         freq.setValue(10000.0);
-        if(static_cast<int>(tenThousButton.getToggleState()))
-        {
-        tenThousButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
-        hundredButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        oneThousButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        }
     };
     addAndMakeVisible(tenThousButton);
     

@@ -61,6 +61,10 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> lrAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> rAttachment;
     
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> hundredAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> oneThousAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> tenThousAttachment;
+    
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> routingAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> freqAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAttachment;
