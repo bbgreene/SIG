@@ -96,10 +96,7 @@ void SIGAudioProcessor::parameterChanged(const juce::String &parameterID, float 
     {
         bypass = newValue;
     }
-    if(parameterID == "routing")
-    {
-        routingChoice = newValue;
-    }
+    
     auto sineChoice = treeState.getRawParameterValue("sine")->load();
     auto whiteChoice = treeState.getRawParameterValue("white")->load();
     auto pinkChoice = treeState.getRawParameterValue("pink")->load();
