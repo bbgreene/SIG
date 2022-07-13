@@ -13,11 +13,10 @@
 SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    // set default font
+    // SET DEFAULT FONT
     juce::LookAndFeel::getDefaultLookAndFeel().setDefaultSansSerifTypefaceName ("Avenir Next");
     
-    // Dials and buttons with their respective attachments
-
+    //SIGNAL TYPE BUTTONS AND ATTACHMENTS
     sineAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "sine", sineButton);
     whiteAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "white", whiteButton);
     pinkAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "pink", pinkButton);
@@ -34,6 +33,7 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     pinkButton.setRadioGroupId(1);
     addAndMakeVisible(pinkButton);
 
+    //ROUTING BUTTONS AND ATTACHMENTS
     lAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "l", lButton);
     lrAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "lr", lRButton);
     rAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "r", rButton);
@@ -49,7 +49,8 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     rButton.setClickingTogglesState(true);
     rButton.setRadioGroupId(2);
     addAndMakeVisible(rButton);
-
+    
+    //FREQ BUTTONS AND ATTACHMENTS
     freqAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "freq", freq);
     freq.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     addAndMakeVisible(freq);
@@ -82,7 +83,7 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     };
     addAndMakeVisible(tenThousButton);
     
-    
+    //GAIN BUTTONS AND ATTACHMENTS
     gainAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "gain", gain);
     gain.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     addAndMakeVisible(gain);
@@ -126,7 +127,7 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     onOffAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "bypass", onOffSwitch);
     addAndMakeVisible(onOffSwitch);
     
-    // Titles
+    // TITLE
     sigTitle.setFont(juce::Font (30.0f, juce::Font::plain));
     sigTitle.setJustificationType(juce::Justification::centredLeft);
     sigTitle.setColour(juce::Label::textColourId, juce::Colours::darkslategrey);
@@ -142,7 +143,7 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     olumay.setColour(juce::Label::textColourId, juce::Colours::darkslategrey);
     addAndMakeVisible(olumay);
     
-    // Borders
+    // BORDERS
     signalGroup.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::lightgrey);
     signalGroup.setColour(juce::GroupComponent::ColourIds::textColourId, juce::Colours::grey);
     signalGroup.setTextLabelPosition(juce::Justification::centred);
@@ -167,13 +168,11 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     gainGroup.setText("GAIN");
     addAndMakeVisible(gainGroup);
     
-    // Resizing
+    // RESIZING
     setResizable(true, true);
     setResizeLimits(350, 350, 500, 500);
     getConstrainer()->setFixedAspectRatio(1.0);
     
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
     setSize (350, 350);
 }
 
