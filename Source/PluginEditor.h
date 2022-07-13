@@ -67,6 +67,13 @@ private:
     bbg_gui::bbg_dialLabel sigTitle { "S I G" };
     bbg_gui::bbg_dialLabel sigVersion { "version 1.1" };
     
+    //borders
+    
+    juce::GroupComponent signalGroup;
+    juce::GroupComponent freqGroup;
+    juce::GroupComponent routingGroup;
+    juce::GroupComponent gainGroup;
+    
     
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
