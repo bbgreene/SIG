@@ -66,7 +66,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createPar
     
     auto pGain = std::make_unique<juce::AudioParameterFloat>("gain", "Gain", juce::NormalisableRange<float>(-120.0f, 0.0, 0.01, 1.0f), -20.0f);
     auto pFreq = std::make_unique<juce::AudioParameterFloat>("freq", "Freq", juce::NormalisableRange<float>(20.0f, 21000.0, 0.01, 0.3f), 440.0f);
-    auto pBypass = std::make_unique<juce::AudioParameterBool>("bypass", "Bypass", 0);
+    auto pBypass = std::make_unique<juce::AudioParameterBool>("bypass", "Bypass", 1);
     auto pSineChoice = std::make_unique<juce::AudioParameterBool>("sine", "Sine", 1);
     auto pWhiteChoice = std::make_unique<juce::AudioParameterBool>("white", "White", 0);
     auto pPinkChoice = std::make_unique<juce::AudioParameterBool>("pink", "Pink", 0);
@@ -76,7 +76,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createPar
     auto pHundred = std::make_unique<juce::AudioParameterBool>("hundred", "Hundred", 0);
     auto pThousand = std::make_unique<juce::AudioParameterBool>("thousand", "Thousand", 0);
     auto pTenThousand = std::make_unique<juce::AudioParameterBool>("tenThous", "tenThous", 0);
-    auto pMinusTwenty = std::make_unique<juce::AudioParameterBool>("minus twenty", "Minus Twenty", 0);
+    auto pMinusTwenty = std::make_unique<juce::AudioParameterBool>("minus twenty", "Minus Twenty", 1);
     auto pMinusTwelve = std::make_unique<juce::AudioParameterBool>("minus twelve", "Minus Twelve", 0);
     auto pMinusSix = std::make_unique<juce::AudioParameterBool>("minus six", "Minus Six", 0);
     
@@ -108,6 +108,7 @@ void SIGAudioProcessor::parameterChanged(const juce::String &parameterID, float 
     {
         bypass = newValue;
     }
+    treeState.getRawParameterValue("bypass")->load();
     
     auto sineChoice = treeState.getRawParameterValue("sine")->load();
     auto whiteChoice = treeState.getRawParameterValue("white")->load();
@@ -247,6 +248,8 @@ void SIGAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     treeState.getRawParameterValue("minus twenty")->load();
     treeState.getRawParameterValue("minus twelve")->load();
     treeState.getRawParameterValue("minus six")->load();
+    
+    bypass = treeState.getRawParameterValue("bypass")->load();
 }
 
 void SIGAudioProcessor::releaseResources()
@@ -337,7 +340,7 @@ void SIGAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     }
     
     //bypass if statement
-    if(bypass){} // if true, do nothing
+    if(!bypass){} // if true, do nothing
     else //if false process osc, white, pink depending on signalType chosen
     {
         switch (signalType)
