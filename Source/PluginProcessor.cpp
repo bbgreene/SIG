@@ -76,7 +76,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createPar
     auto pHundred = std::make_unique<juce::AudioParameterBool>("hundred", "Hundred", 0);
     auto pThousand = std::make_unique<juce::AudioParameterBool>("thousand", "Thousand", 0);
     auto pTenThousand = std::make_unique<juce::AudioParameterBool>("tenThous", "tenThous", 0);
-    auto pMinusTwenty = std::make_unique<juce::AudioParameterBool>("minus twenty", "Minus Twenty", 1);
+    auto pMinusTwenty = std::make_unique<juce::AudioParameterBool>("minus twenty", "Minus Twenty", 0);
     auto pMinusTwelve = std::make_unique<juce::AudioParameterBool>("minus twelve", "Minus Twelve", 0);
     auto pMinusSix = std::make_unique<juce::AudioParameterBool>("minus six", "Minus Six", 0);
     

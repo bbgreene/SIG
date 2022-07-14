@@ -59,51 +59,26 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     oneThousAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "thousand", oneThousButton);
     tenThousAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "tenThous", tenThousButton);
     
-    hundredButton.setClickingTogglesState(true);
-    hundredButton.setRadioGroupId(3);
+    hundredButton.setClickingTogglesState(false);
     hundredButton.onClick = [this]()
     {
         freq.setValue(100.0);
     };
     addAndMakeVisible(hundredButton);
     
-    oneThousButton.setClickingTogglesState(true);
-    oneThousButton.setRadioGroupId(3);
+    oneThousButton.setClickingTogglesState(false);
     oneThousButton.onClick = [this]()
     {
         freq.setValue(1000.0);
     };
     addAndMakeVisible(oneThousButton);
     
-    tenThousButton.setClickingTogglesState(true);
-    tenThousButton.setRadioGroupId(3);
+    tenThousButton.setClickingTogglesState(false);
     tenThousButton.onClick = [this]()
     {
         freq.setValue(10000.0);
     };
     addAndMakeVisible(tenThousButton);
-    
-    freq.onValueChange = [&]()
-    {
-        if (freq.getValue() != 100.00 && freq.getValue() != 1000.00 && freq.getValue() != 10000.00)
-        {
-            hundredButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-            oneThousButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-            tenThousButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        }
-        if (freq.getValue() == 100.00)
-        {
-            hundredButton.setToggleState(true, juce::NotificationType::dontSendNotification);
-        }
-        if (freq.getValue() == 1000.00)
-        {
-            oneThousButton.setToggleState(true, juce::NotificationType::dontSendNotification);
-        }
-        if (freq.getValue() == 10000.00)
-        {
-            tenThousButton.setToggleState(true, juce::NotificationType::dontSendNotification);
-        }
-    };
     
     //GAIN BUTTONS AND ATTACHMENTS
     gainAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "gain", gain);
@@ -114,51 +89,26 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     minusTwelveAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "minus twelve", minusTwelveButton);
     minusSixAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "minus six", minusSixButton);
     
-    minusTwentyButton.setClickingTogglesState(true);
-    minusTwentyButton.setRadioGroupId(4);
+    minusTwentyButton.setClickingTogglesState(false);
     minusTwentyButton.onClick = [this]()
     {
         gain.setValue(-20.0);
     };
     addAndMakeVisible(minusTwentyButton);
 
-    minusTwelveButton.setClickingTogglesState(true);
-    minusTwelveButton.setRadioGroupId(4);
+    minusTwelveButton.setClickingTogglesState(false);
     minusTwelveButton.onClick = [this]()
     {
         gain.setValue(-12.0);
     };
     addAndMakeVisible(minusTwelveButton);
 
-    minusSixButton.setClickingTogglesState(true);
-    minusSixButton.setRadioGroupId(4);
+    minusSixButton.setClickingTogglesState(false);
     minusSixButton.onClick = [this]()
     {
         gain.setValue(-6.0);
     };
     addAndMakeVisible(minusSixButton);
-    
-    gain.onValueChange = [&]()
-    {
-        if (gain.getValue() != -20.00 && gain.getValue() != -12.00 && gain.getValue() != -6.00)
-        {
-            minusTwentyButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-            minusTwelveButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-            minusSixButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        }
-        if (gain.getValue() == -20.00)
-        {
-            minusTwentyButton.setToggleState(true, juce::NotificationType::dontSendNotification);
-        }
-        if (gain.getValue() == -12.00)
-        {
-            minusTwelveButton.setToggleState(true, juce::NotificationType::dontSendNotification);
-        }
-        if (gain.getValue() == -6.00)
-        {
-            minusSixButton.setToggleState(true, juce::NotificationType::dontSendNotification);
-        }
-    };
     
     //BYPASS ON/OFF BUTTON AND ATTACHMENT
     onOffAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "bypass", onOffSwitch);
