@@ -35,6 +35,9 @@ SIGAudioProcessor::SIGAudioProcessor()
     treeState.addParameterListener("hundred", this);
     treeState.addParameterListener("thousand", this);
     treeState.addParameterListener("tenThous", this);
+    treeState.addParameterListener("minus twenty", this);
+    treeState.addParameterListener("minus twelve", this);
+    treeState.addParameterListener("minus six", this);
 }
 
 SIGAudioProcessor::~SIGAudioProcessor()
@@ -52,6 +55,9 @@ SIGAudioProcessor::~SIGAudioProcessor()
     treeState.removeParameterListener("hundred", this);
     treeState.removeParameterListener("thousand", this);
     treeState.removeParameterListener("tenThous", this);
+    treeState.removeParameterListener("minus twenty", this);
+    treeState.removeParameterListener("minus twelve", this);
+    treeState.removeParameterListener("minus six", this);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createParameterLayout()
@@ -70,6 +76,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createPar
     auto pHundred = std::make_unique<juce::AudioParameterBool>("hundred", "Hundred", 0);
     auto pThousand = std::make_unique<juce::AudioParameterBool>("thousand", "Thousand", 0);
     auto pTenThousand = std::make_unique<juce::AudioParameterBool>("tenThous", "tenThous", 0);
+    auto pMinusTwenty = std::make_unique<juce::AudioParameterBool>("minus twenty", "Minus Twenty", 0);
+    auto pMinusTwelve = std::make_unique<juce::AudioParameterBool>("minus twelve", "Minus Twelve", 0);
+    auto pMinusSix = std::make_unique<juce::AudioParameterBool>("minus six", "Minus Six", 0);
     
     params.push_back(std::move(pGain));
     params.push_back(std::move(pFreq));
@@ -83,6 +92,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createPar
     params.push_back(std::move(pHundred));
     params.push_back(std::move(pThousand));
     params.push_back(std::move(pTenThousand));
+    params.push_back(std::move(pMinusTwenty));
+    params.push_back(std::move(pMinusTwelve));
+    params.push_back(std::move(pMinusSix));
     
     return { params.begin(), params.end() };
 }
@@ -134,6 +146,10 @@ void SIGAudioProcessor::parameterChanged(const juce::String &parameterID, float 
     treeState.getRawParameterValue("hundred")->load();
     treeState.getRawParameterValue("thousand")->load();
     treeState.getRawParameterValue("tenThous")->load();
+    
+    treeState.getRawParameterValue("minus twenty")->load();
+    treeState.getRawParameterValue("minus twelve")->load();
+    treeState.getRawParameterValue("minus six")->load();
 }
 
 //==============================================================================
@@ -227,6 +243,10 @@ void SIGAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     treeState.getRawParameterValue("hundred")->load();
     treeState.getRawParameterValue("thousand")->load();
     treeState.getRawParameterValue("tenThous")->load();
+    
+    treeState.getRawParameterValue("minus twenty")->load();
+    treeState.getRawParameterValue("minus twelve")->load();
+    treeState.getRawParameterValue("minus six")->load();
 }
 
 void SIGAudioProcessor::releaseResources()

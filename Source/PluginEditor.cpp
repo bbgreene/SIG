@@ -88,42 +88,35 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     gain.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     addAndMakeVisible(gain);
     
+    minusTwentyAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "minus twenty", minusTwentyButton);
+    minusTwelveAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "minus twelve", minusTwelveButton);
+    minusSixAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "minus six", minusSixButton);
+    
+    minusTwentyButton.setClickingTogglesState(true);
+    minusTwentyButton.setRadioGroupId(4);
     minusTwentyButton.onClick = [this]()
     {
         gain.setValue(-20.0);
-        if(static_cast<int>(minusTwentyButton.getToggleState()))
-        {
-        minusTwentyButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
-        minusTwelveButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        minusSixButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        }
     };
     addAndMakeVisible(minusTwentyButton);
 
+    minusTwelveButton.setClickingTogglesState(true);
+    minusTwelveButton.setRadioGroupId(4);
     minusTwelveButton.onClick = [this]()
     {
         gain.setValue(-12.0);
-        if(static_cast<int>(minusTwelveButton.getToggleState()))
-        {
-        minusTwelveButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
-        minusTwentyButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        minusSixButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        }
     };
     addAndMakeVisible(minusTwelveButton);
 
+    minusSixButton.setClickingTogglesState(true);
+    minusSixButton.setRadioGroupId(4);
     minusSixButton.onClick = [this]()
     {
         gain.setValue(-6.0);
-        if(static_cast<int>(minusSixButton.getToggleState()))
-        {
-        minusSixButton.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::coral);
-        minusTwentyButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        minusTwelveButton.setToggleState(false, juce::NotificationType::dontSendNotification);
-        }
     };
     addAndMakeVisible(minusSixButton);
     
+    //BYPASS ON/OFF BUTTON AND ATTACHMENT
     onOffAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "bypass", onOffSwitch);
     addAndMakeVisible(onOffSwitch);
     
