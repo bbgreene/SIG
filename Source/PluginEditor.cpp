@@ -230,13 +230,13 @@ void SIGAudioProcessorEditor::resized()
     auto dialSize = getWidth() * 0.33;
     auto freqDialXPos = getWidth() * 0.087;
     auto gainDialXPos = getWidth() * 0.577;
-    auto dialY = getHeight() * 0.55;
+    auto dialY = getHeight() * 0.597;
     auto leftMargin = getHeight() * 0.05;
     
     auto buttonWidth = getWidth() * 0.13;
     auto buttonHeight = (getHeight()/7) * 0.5;
-    auto buttonTopMargin = getHeight() * 0.23;
-    auto buttonYPosSecondRow = getHeight() * 0.4586;
+    auto buttonTopMargin = getHeight() * 0.26;
+    auto buttonYPosSecondRow = getHeight() * 0.51;
     auto buttonGap = getWidth() * 0.01428;
     auto buttonRightSideStartPos = getWidth() * 0.54;
     
@@ -273,7 +273,7 @@ void SIGAudioProcessorEditor::resized()
     gainGroup.setBounds(borderColTwoX, borderRowTwoY, borderWidth, largeBorderH);
     
     auto olumayX = getWidth() * 0.015;
-    auto olumayY = getHeight() * 0.92;
+    auto olumayY = getHeight() * 0.938;
     auto olumayWidth = getWidth() * 0.3;
     auto sigTitleWidth = getWidth() * 0.17;
     auto sigTitleHeight = getHeight() * 0.058;
