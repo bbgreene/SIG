@@ -64,8 +64,24 @@ juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createPar
 {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
     
-    auto pGain = std::make_unique<juce::AudioParameterFloat>("gain", "Gain", juce::NormalisableRange<float>(-120.0f, 0.0, 0.01, 1.0f), -20.0f);
-    auto pFreq = std::make_unique<juce::AudioParameterFloat>("freq", "Freq", juce::NormalisableRange<float>(20.0f, 21000.0, 0.01, 0.3f), 440.0f);
+    auto pGain = std::make_unique<juce::AudioParameterFloat>("gain",
+                                                             "Gain",
+                                                             juce::NormalisableRange<float>(-120.0f, 0.0, 0.01, 1.0f),
+                                                             -20.0f,
+                                                             juce::String(),
+                                                             juce::AudioProcessorParameter::genericParameter,
+                                                             [](float value, int) {return (value < -10.0f) ? juce::String (value, 1) + " dB": juce::String (value, 2) + " dB";},
+                                                             [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
+
+    auto pFreq = std::make_unique<juce::AudioParameterFloat>("freq",
+                                                             "Freq",
+                                                             juce::NormalisableRange<float>(20.0f, 21000.0, 0.1, 0.3f),
+                                                             440.0f,
+                                                             juce::String(),
+                                                             juce::AudioProcessorParameter::genericParameter,
+                                                             [](float value, int) {return (value < 1000.0) ? juce::String (value, 1) + " Hz" : juce::String (value / 1000.0f, 2) + " kHz";},
+                                                             [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});;
+    
     auto pBypass = std::make_unique<juce::AudioParameterBool>("bypass", "Bypass", 1);
     auto pSineChoice = std::make_unique<juce::AudioParameterBool>("sine", "Sine", 1);
     auto pWhiteChoice = std::make_unique<juce::AudioParameterBool>("white", "White", 0);

@@ -156,9 +156,9 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     addAndMakeVisible(gainGroup);
     
     // RESIZING
-    setResizable(true, true);
-    setResizeLimits(350, 350, 500, 500);
-    getConstrainer()->setFixedAspectRatio(1.0);
+    setResizable(false, false);
+//    setResizeLimits(350, 350, 500, 500);
+//    getConstrainer()->setFixedAspectRatio(1.0);
     
     setSize (350, 350);
 }
