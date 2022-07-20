@@ -17,53 +17,49 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     juce::LookAndFeel::getDefaultLookAndFeel().setDefaultSansSerifTypefaceName ("Avenir Next");
     
     //SIGNAL TYPE BUTTONS AND ATTACHMENTS
-    sineAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "sine", sineButton);
-    whiteAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "white", whiteButton);
-    pinkAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "pink", pinkButton);
-    
     sineButton.setClickingTogglesState(true);
     sineButton.setRadioGroupId(1);
+    sineAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "sine", sineButton);
     addAndMakeVisible(sineButton);
 
     whiteButton.setClickingTogglesState(true);
     whiteButton.setRadioGroupId(1);
+    whiteAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "white", whiteButton);
     addAndMakeVisible(whiteButton);
     
     pinkButton.setClickingTogglesState(true);
     pinkButton.setRadioGroupId(1);
+    pinkAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "pink", pinkButton);
     addAndMakeVisible(pinkButton);
 
     //ROUTING BUTTONS AND ATTACHMENTS
-    lAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "l", lButton);
-    lrAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "lr", lRButton);
-    rAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "r", rButton);
     
     lButton.setClickingTogglesState(true);
     lButton.setRadioGroupId(2);
+    lAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "l", lButton);
     addAndMakeVisible(lButton);
 
     lRButton.setClickingTogglesState(true);
     lRButton.setRadioGroupId(2);
+    lrAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "lr", lRButton);
     addAndMakeVisible(lRButton);
     
     rButton.setClickingTogglesState(true);
     rButton.setRadioGroupId(2);
+    rAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "r", rButton);
     addAndMakeVisible(rButton);
     
     //FREQ BUTTONS AND ATTACHMENTS
-    freqAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "freq", freq);
     freq.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    freqAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "freq", freq);
     addAndMakeVisible(freq);
-    
-    hundredAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "hundred", hundredButton);
-    oneThousAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "thousand", oneThousButton);
-    tenThousAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "tenThous", tenThousButton);
     
     hundredButton.setClickingTogglesState(false);
     hundredButton.onClick = [this]()
     {
         freq.setValue(100.0);
     };
+    hundredAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "hundred", hundredButton);
     addAndMakeVisible(hundredButton);
     
     oneThousButton.setClickingTogglesState(false);
@@ -71,6 +67,7 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     {
         freq.setValue(1000.0);
     };
+    oneThousAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "thousand", oneThousButton);
     addAndMakeVisible(oneThousButton);
     
     tenThousButton.setClickingTogglesState(false);
@@ -78,22 +75,20 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     {
         freq.setValue(10000.0);
     };
+    tenThousAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "tenThous", tenThousButton);
     addAndMakeVisible(tenThousButton);
     
     //GAIN BUTTONS AND ATTACHMENTS
-    gainAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "gain", gain);
     gain.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    gainAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "gain", gain);
     addAndMakeVisible(gain);
-    
-    minusTwentyAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "minus twenty", minusTwentyButton);
-    minusTwelveAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "minus twelve", minusTwelveButton);
-    minusSixAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "minus six", minusSixButton);
     
     minusTwentyButton.setClickingTogglesState(false);
     minusTwentyButton.onClick = [this]()
     {
         gain.setValue(-20.0);
     };
+    minusTwentyAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "minus twenty", minusTwentyButton);
     addAndMakeVisible(minusTwentyButton);
 
     minusTwelveButton.setClickingTogglesState(false);
@@ -101,6 +96,7 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     {
         gain.setValue(-12.0);
     };
+    minusTwelveAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "minus twelve", minusTwelveButton);
     addAndMakeVisible(minusTwelveButton);
 
     minusSixButton.setClickingTogglesState(false);
@@ -108,6 +104,7 @@ SIGAudioProcessorEditor::SIGAudioProcessorEditor (SIGAudioProcessor& p)
     {
         gain.setValue(-6.0);
     };
+    minusSixAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "minus six", minusSixButton);
     addAndMakeVisible(minusSixButton);
     
     //BYPASS ON/OFF BUTTON AND ATTACHMENT
