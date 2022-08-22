@@ -9,22 +9,22 @@ A signal generator vst3 plugin made with JUCE.
  
 ** Parameters**
 
-On/Off: turns SIG on and off\
+On/Off: turns SIG on and off
 
 <b>SIGNAL TYPE:</b>
 
- Three common signal type (sine, white noise and pink noise)\
+ Three common signal types (sine, white noise and pink noise)
  
  <b>ROUTING:</b>
 
- Signal can be played separately through stereo, left or right outputs\
+ Signal can be played through stereo or separately on left and right outputs
  
  <b>FREQUENCY:</b>
  
- Sweepable sine frequency (20 to 21000 Hz) with shortcut buttons\
+ Sweepable sine frequency (20 to 21000 Hz) with shortcut buttons
  
  <b>GAIN:</b>
  
- Adjustable gain (-20 to 0dB) with shortcut buttons\
+ Adjustable gain (-120 to 0dB) with shortcut buttons
  
  Next steps: VST3 and AU installation builds for macOs (Intel, M1, M2) and Windows
