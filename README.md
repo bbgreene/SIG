@@ -1,39 +1,30 @@
-# T A M P E R
+# S I G
 
-A waveshaping and convolution distortion vst3 plugin made with JUCE.
+A signal generator vst3 plugin made with JUCE.
 
-![TAMPER](https://github.com/bbgreene/TAMPER/blob/master/Screenshots/TAMPER%20-%20gui.png?raw=true
- "TAMPER")
+![SIG](https://github.com/bbgreene/SIG/blob/master/Screenshots/SIG%20-%20gui.png?raw=true
+ "SIG")
  
  
  
 ** Parameters**
 
-<b>MODEL:</b>
+On/Off: turns SIG on and off\
 
- On/Off: toggles filters on or off\
- High: high pass filter (20 - 2000 Hz) pre waveshaping distortion\
- Low: low pass filter (5000 - 20000 Hz) post waveshaping distortion\
- On/Off: toggles waveshaping distortion on or off\
- Drive: amount of drive (distortion) applied to the incoming signal (0 - 24dB)\
- Model Type: the type of waveshaping applied (soft clip, hard clip, saturation, broken)\
- Oversample: toggles oversampling on or off. If on, then the signal will be oversampled x4 before any distortion processing then downsampled post distortion processing to avoid aliasing.
+<b>SIGNAL TYPE:</b>
+
+ Three common signal type (sine, white noise and pink noise)\
  
- <b>CAB SIM:</b>
+ <b>ROUTING:</b>
+
+ Signal can be played separately through stereo, left or right outputs\
  
- On/Off: toggles the cabinet simulator on or off\
- Cab Mix: adjusts the amount of waveshaped signal is sent into the cabinet simulation\
- Cab Type: a selection of impulse responses used for the convolution process
+ <b>FREQUENCY:</b>
  
- <b>LIMITER:</b>
+ Sweepable sine frequency (20 to 21000 Hz) with shortcut buttons\
  
- On/Off: toggles the limiter on or off\
- Threshold: sets the threshold in dB of the limiter (0 to  -10dB)\
- Release: sets the release time in milliseconds of the limiter (1 - 1000ms)
+ <b>GAIN:</b>
  
- <b>OUT:</b>
- 
- Mix: adjusts the balance between the input signal and the processed signal\
- Output: boosts or attenuates the output of the plugin (-24 to +24dB)
+ Adjustable gain (-20 to 0dB) with shortcut buttons\
  
  Next steps: VST3 and AU installation builds for macOs (Intel, M1, M2) and Windows
