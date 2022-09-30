@@ -2,7 +2,8 @@
 
 <JUCERPROJECT id="atxE3a" name="SIG" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginManufacturer="Olumay dsp"
-              cppLanguageStandard="17">
+              cppLanguageStandard="17" companyWebsite="https://bbgreene.github.io/"
+              companyName="Olumay dsp">
   <MAINGROUP id="cwqjOI" name="SIG">
     <GROUP id="{A796C4DB-899D-D56B-C7CF-D79E4913ABE5}" name="Source">
       <GROUP id="{6F093111-78F4-EF03-7D65-491113433E42}" name="bbg_gui">
