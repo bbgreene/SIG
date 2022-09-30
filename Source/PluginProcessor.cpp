@@ -70,8 +70,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createPar
                                                              -20.0f,
                                                              juce::String(),
                                                              juce::AudioProcessorParameter::genericParameter,
-                                                             [](float value, int) {return (value < -10.0f) ? juce::String (value, 1) + " dB": juce::String (value, 2) + " dB";},
-                                                             [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
+                                                             [](float value, int) {return (value < -10.0f) ? juce::String (value, 1) + " dB": juce::String (value, 2) + " dB";});
 
     auto pFreq = std::make_unique<juce::AudioParameterFloat>("freq",
                                                              "Freq",
@@ -79,8 +78,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SIGAudioProcessor::createPar
                                                              440.0f,
                                                              juce::String(),
                                                              juce::AudioProcessorParameter::genericParameter,
-                                                             [](float value, int) {return (value < 1000.0) ? juce::String (value, 1) + " Hz" : juce::String (value / 1000.0f, 2) + " kHz";},
-                                                             [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});;
+                                                             [](float value, int) {return (value < 1000.0) ? juce::String (value, 1) + " Hz" : juce::String (value / 1000.0f, 2) + " kHz";});
     
     auto pBypass = std::make_unique<juce::AudioParameterBool>("bypass", "Bypass", 1);
     auto pSineChoice = std::make_unique<juce::AudioParameterBool>("sine", "Sine", 1);
